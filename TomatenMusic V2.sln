@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusic Api", "TomatenMusic Api\TomatenMusic Api.csproj", "{DC429A00-E2CC-4E66-A3B9-AE5F6B37E93A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusic_Api", "TomatenMusic Api\TomatenMusic_Api.csproj", "{DC429A00-E2CC-4E66-A3B9-AE5F6B37E93A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusicCore", "TomatenMusicCore\TomatenMusicCore.csproj", "{54481E45-9FE3-4CF3-9CE9-489B678AE472}"
 EndProject
