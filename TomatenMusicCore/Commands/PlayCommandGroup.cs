@@ -15,18 +15,14 @@ using TomatenMusic.Util;
 namespace TomatenMusic.Commands
 {
 
-    [SlashCommandGroup("play", "Play a song.")]
-    public class PlayCommandGroup : ApplicationCommandModule
-    {
-
-        [SlashCommandGroup("now", "Plays the specified Song now and prepends the Current song to the Queue.")]
+        [SlashCommandGroup("playnow", "Plays the specified Song now and prepends the Current song to the Queue.")]
         public class PlayNowGroup : ApplicationCommandModule
         {
             public IAudioService _audioService { get; set; }
-            public ILogger<PlayCommandGroup> _logger { get; set; }
+            public ILogger<PlayNowGroup> _logger { get; set; }
             public TrackProvider _trackProvider { get; set; }
 
-            public PlayNowGroup(IAudioService audioService, ILogger<PlayCommandGroup> logger, TrackProvider trackProvider)
+            public PlayNowGroup(IAudioService audioService, ILogger<PlayNowGroup> logger, TrackProvider trackProvider)
             {
                 _audioService = audioService;
                 _logger = logger;
@@ -155,14 +151,14 @@ namespace TomatenMusic.Commands
             }
         }
 
-        [SlashCommandGroup("queue", "Queues or plays the Song")]
+        [SlashCommandGroup("play", "Queues or plays the Song")]
         public class PlayQueueGroup : ApplicationCommandModule
         {
             public IAudioService _audioService { get; set; }
-            public ILogger<PlayCommandGroup> _logger { get; set; }
+            public ILogger<PlayQueueGroup> _logger { get; set; }
             public TrackProvider _trackProvider { get; set; }
 
-            public PlayQueueGroup(IAudioService audioService, ILogger<PlayCommandGroup> logger, TrackProvider trackProvider)
+            public PlayQueueGroup(IAudioService audioService, ILogger<PlayQueueGroup> logger, TrackProvider trackProvider)
             {
                 _audioService = audioService;
                 _logger = logger;
@@ -290,5 +286,4 @@ namespace TomatenMusic.Commands
                 await player.PlayAsync(response.Track);
             }
         }
-    }
 }

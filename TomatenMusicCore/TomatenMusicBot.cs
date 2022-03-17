@@ -128,7 +128,9 @@ namespace TomatenMusic
             });
 
             slash.RegisterCommands<MusicCommands>(888493810554900491);
-            slash.RegisterCommands<PlayCommandGroup>(888493810554900491);
+            slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
+            slash.RegisterCommands<PlayNowGroup>(888493810554900491);
+
 
             await client.StartAsync();
             client.Ready += Client_Ready;
