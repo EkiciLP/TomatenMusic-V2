@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusicCore", "TomatenMusicCore\TomatenMusicCore.csproj", "{54481E45-9FE3-4CF3-9CE9-489B678AE472}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3F84EF2-B7C2-44F0-B392-6824AE96530A}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
@@ -12,20 +10,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusic", "TomatenMusic\TomatenMusic.csproj", "{E612AAB3-9A73-47F3-ACA0-D3A4CC627D4E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TomatenMusicCore", "TomatenMusicCore\TomatenMusicCore.csproj", "{40B1E82B-656D-413B-B636-EB0AE84391E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{54481E45-9FE3-4CF3-9CE9-489B678AE472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54481E45-9FE3-4CF3-9CE9-489B678AE472}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54481E45-9FE3-4CF3-9CE9-489B678AE472}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54481E45-9FE3-4CF3-9CE9-489B678AE472}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E612AAB3-9A73-47F3-ACA0-D3A4CC627D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E612AAB3-9A73-47F3-ACA0-D3A4CC627D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E612AAB3-9A73-47F3-ACA0-D3A4CC627D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E612AAB3-9A73-47F3-ACA0-D3A4CC627D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B1E82B-656D-413B-B636-EB0AE84391E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B1E82B-656D-413B-B636-EB0AE84391E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B1E82B-656D-413B-B636-EB0AE84391E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B1E82B-656D-413B-B636-EB0AE84391E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

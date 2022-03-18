@@ -53,7 +53,7 @@ namespace TomatenMusic.Services
 
                 if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
 
-                return new MusicActionResponse(await FullTrackContext.PopulateAsync(track, sTrack.Uri));
+                return new MusicActionResponse(await FullTrackContext.PopulateAsync(track, trackId));
 
             }
             else if (url.StartsWith("https://open.spotify.com/album"))

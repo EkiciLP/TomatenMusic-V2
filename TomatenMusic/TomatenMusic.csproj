@@ -29,11 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TomatenMusicCore\TomatenMusicCore.csproj" />
+    <Folder Include="Auth\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Auth\" />
+    <ProjectReference Include="..\TomatenMusicCore\TomatenMusicCore.csproj" />
   </ItemGroup>
 
 </Project>

@@ -126,10 +126,13 @@ namespace TomatenMusic
             {
                 Services = ServiceProvider
             });
-
             slash.RegisterCommands<MusicCommands>(888493810554900491);
             slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
             slash.RegisterCommands<PlayNowGroup>(888493810554900491);
+
+            slash.RegisterCommands<MusicCommands>(835089895092387872);
+            slash.RegisterCommands<PlayQueueGroup>(835089895092387872);
+            slash.RegisterCommands<PlayNowGroup>(835089895092387872);
 
 
             await client.StartAsync();
@@ -145,10 +148,12 @@ namespace TomatenMusic
 
         private Task Client_Ready(DiscordClient sender, ReadyEventArgs e)
         {
+            var logger = ServiceProvider.GetRequiredService<ILogger<TomatenMusicBot>>();
             var slash = sender.GetSlashCommands();
             slash.SlashCommandInvoked += Slash_SlashCommandInvoked;
             slash.SlashCommandErrored += Slash_SlashCommandErrored;
             sender.UpdateStatusAsync(new DiscordActivity($"/ commands! Shard {sender.ShardId}", ActivityType.Watching));
+
 
             return Task.CompletedTask;
         }

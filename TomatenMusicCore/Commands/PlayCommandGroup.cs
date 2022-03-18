@@ -48,7 +48,7 @@ namespace TomatenMusic.Commands
                 catch (Exception ex)
                 {
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-                     .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``")
+                     .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
                     return;
                 }
@@ -185,7 +185,7 @@ namespace TomatenMusic.Commands
                 catch (Exception ex)
                 {
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-                     .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``")
+                     .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
                     return;
                 }
