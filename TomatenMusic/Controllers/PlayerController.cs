@@ -77,7 +77,7 @@ public class PlayerController : ControllerBase
 
 		try
         {
-			channel = await _tomatenMusicDataService.GetDiscordChannelAsync(request.Channel_Id);
+			channel = await _tomatenMusicDataService.GetDiscordChannelAsync(request.Guild_Id, request.Channel_Id);
 		}catch (Exception ex)
         {
 			return NotFound("Channel was not Found");

@@ -58,18 +58,19 @@ namespace TomatenMusic_Api
             return list;
         }
 
-        public Task<DiscordChannel> GetDiscordChannelAsync(ulong channel_id)
+        public Task<DiscordChannel> GetDiscordChannelAsync(ulong guild_id, ulong channel_id)
         {
-            DiscordClient client = _serviceProvider.GetRequiredService<DiscordClient>();
-
-            return client.GetChannelAsync(channel_id);
+            var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
+            var guildClient = client.GetShard(guild_id);
+            return guildClient.GetChannelAsync(channel_id);
         }
 
         public Task<DiscordGuild> GetGuildAsync(ulong guild_id)
         {
-            DiscordClient client = _serviceProvider.GetRequiredService<DiscordClient>();
+            var client = _serviceProvider.GetRequiredService<DiscordShardedClient>();
+            var guildClient = client.GetShard(guild_id);
 
-            return client.GetGuildAsync(guild_id);
+            return guildClient.GetGuildAsync(guild_id);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
