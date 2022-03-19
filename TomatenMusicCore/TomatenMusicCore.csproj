@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.emzi0767.com/api/v3/index.json
+    </RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01088" />
+		<PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01084" />
+		<PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01088" />
+		<PackageReference Include="Google.Apis.YouTube.v3" Version="1.56.0.2617" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+		<PackageReference Include="Lavalink4NET" Version="2.1.1" />
+		<PackageReference Include="Lavalink4NET.DSharpPlus" Version="2.1.1" />
+		<PackageReference Include="Lavalink4NET.Logging.Microsoft" Version="2.1.1-preview.5" />
+		<PackageReference Include="Lavalink4NET.MemoryCache" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.OwinSelfHost" Version="5.2.7" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="SpotifyAPI.Web" Version="6.2.2" />
+		<PackageReference Include="SpotifyAPI.Web.Auth" Version="6.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="config.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
