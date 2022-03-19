@@ -3,7 +3,7 @@ assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatch
 assembly-informational-format: '{InformationalVersion}'
 mode: ContinuousDelivery
-increment: Inherit
+increment: Minor
 tag-prefix: '[vV]'
 major-version-bump-message: '\+semver:\s?(breaking|major)'
 minor-version-bump-message: '\+semver:\s?(feature|minor)'
@@ -24,6 +24,7 @@ branches:
     regex: ^master$|^main$
     mode: ContinuousDelivery
     tag: ''
+    increment: Minor
     prevent-increment-of-merged-branch-version: true
     track-merge-target: false
     source-branches: [ 'develop', 'release' ]
@@ -35,6 +36,7 @@ branches:
     regex: ^dev(elop)?(ment)?$
     mode: ContinuousDeployment
     tag: pre
+    increment: Minor
     prevent-increment-of-merged-branch-version: false
     track-merge-target: true
     source-branches: []

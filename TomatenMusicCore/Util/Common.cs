@@ -247,6 +247,14 @@ namespace TomatenMusic.Util
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
             LavalinkTrack track = player.CurrentTrack;
 
+            if (track == null)
+            {
+                builder.WithColor(DiscordColor.Red);
+                builder.WithTitle("Nothing Playing");
+                builder.WithImageUrl("https://media.tomatentum.net/TMBanner.gif");
+                return builder;
+            }
+
             FullTrackContext context = (FullTrackContext)track.Context;
 
             string progressBar = $"|{ProgressBar((int)player.Position.Position.TotalSeconds, (int)track.Duration.TotalSeconds)}|\n [{Common.GetTimestamp(player.Position.Position)}/{Common.GetTimestamp(track.Duration)}]";
@@ -255,6 +263,7 @@ namespace TomatenMusic.Util
             builder.WithTitle(track.Title);
             builder.WithUrl(context.YoutubeUri);
             builder.WithImageUrl(context.YoutubeThumbnail);
+            builder.WithColor(player.State == PlayerState.Paused ? DiscordColor.Orange : DiscordColor.Green);
             builder.AddField("Length", Common.GetTimestamp(track.Duration), true);
             builder.AddField("Loop", player.PlayerQueue.LoopType.ToString(), true);
             builder.AddField("Progress", progressBar, true);

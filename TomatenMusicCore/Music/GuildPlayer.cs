@@ -40,6 +40,8 @@ namespace TomatenMusic.Music
             _audioService = serviceProvider.GetRequiredService<IAudioService>();
         }
 
+        
+
         public async override Task PlayAsync(LavalinkTrack track, TimeSpan? startTime = null, TimeSpan? endTime = null, bool noReplace = true)
         {
 
@@ -256,6 +258,13 @@ namespace TomatenMusic.Music
             await base.SeekPositionAsync(timeSpan);
             QueuePrompt.UpdateFor(GuildId);
         }
+        protected override void Dispose(bool disposing)
+        {
+            QueuePrompt.InvalidateFor(GuildId);
+
+            base.Dispose(disposing);
+        }
+
         public async override Task OnTrackEndAsync(TrackEndEventArgs eventArgs)
         {
             DisconnectOnStop = false;
