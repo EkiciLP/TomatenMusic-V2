@@ -1,8 +1,8 @@
 ﻿{
-  "TOKEN": "YOUR_BOT_TOKEN",
-  "LavaLinkPassword": " ",
-  "SpotifyClientId": " ",
-  "SpotifyClientSecret": " ",
-  "YoutubeApiKey": " "
-
+  "TOKEN": "ODQwNjQ5NjU1MTAwMjQzOTY4.YJbSAA.Y0AiiFVhKLXs4b487JvobxuVk_s",
+  "LavaLinkPassword": "SGWaldsolms9",
+  "SpotifyClientId": "14b77fa47f2f492db58cbdca8f1e5d9c",
+  "SpotifyClientSecret": "c247625f0cfe4b72a1faa01b7c5b8eea",
+  "YoutubeApiKey": "AIzaSyBIcTl9JQ9jF412mX0Wfp_3Y-4a-V0SASQ"
 }
+

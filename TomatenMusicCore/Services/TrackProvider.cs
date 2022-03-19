@@ -41,6 +41,8 @@ namespace TomatenMusic.Music
             else
                 loadResult = await _audioService.LoadTracksAsync(query, SearchMode.YouTube);
 
+            if (uri != null && uri.AbsolutePath.Contains("."))
+                return await SearchAsync(uri);
 
             if (loadResult.LoadType == TrackLoadType.LoadFailed) throw new ArgumentException("Track loading failed");
 

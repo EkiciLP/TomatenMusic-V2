@@ -258,17 +258,18 @@ namespace TomatenMusic.Util
             FullTrackContext context = (FullTrackContext)track.Context;
 
             string progressBar = $"|{ProgressBar((int)player.Position.Position.TotalSeconds, (int)track.Duration.TotalSeconds)}|\n [{Common.GetTimestamp(player.Position.Position)}/{Common.GetTimestamp(track.Duration)}]";
-
-            builder.WithAuthor(track.Author, context.YoutubeAuthorUri.ToString(), context.YoutubeAuthorThumbnail.ToString());
+            
+            builder.WithAuthor(track.Author);
             builder.WithTitle(track.Title);
-            builder.WithUrl(context.YoutubeUri);
-            builder.WithImageUrl(context.YoutubeThumbnail);
+            builder.WithUrl(track.Source);
             builder.WithColor(player.State == PlayerState.Paused ? DiscordColor.Orange : DiscordColor.Green);
             builder.AddField("Length", Common.GetTimestamp(track.Duration), true);
             builder.AddField("Loop", player.PlayerQueue.LoopType.ToString(), true);
             builder.AddField("Progress", progressBar, true);
             if (!context.IsFile)
             {
+                builder.WithAuthor(track.Author, context.YoutubeAuthorUri.ToString(), context.YoutubeAuthorThumbnail.ToString());
+                builder.WithImageUrl(context.YoutubeThumbnail);
                 builder.AddField("Views", $"{context.YoutubeViews:N0} Views", true);
                 builder.AddField("Rating", $"{context.YoutubeLikes:N0} 👍", true);
                 builder.AddField("Upload Date", $"{context.YoutubeUploadDate.ToString("dd. MMMM, yyyy")}", true);
