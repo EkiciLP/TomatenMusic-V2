@@ -114,7 +114,6 @@ namespace TomatenMusic
         {
             await BuildServiceProvider();
 
-            //_ = _host.StartAsync();
 
             _host.Start();
             var client = ServiceProvider.GetRequiredService<DiscordShardedClient>();
