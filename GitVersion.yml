@@ -1,5 +1,9 @@
 mode: ContinuousDelivery
-branches: {}
+branches: 
+  develop:
+    increment: None
+  main:
+    increment: None
 ignore:
   sha: []
 merge-message-formats: {}
