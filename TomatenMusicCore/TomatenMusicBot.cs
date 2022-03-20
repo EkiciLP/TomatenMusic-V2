@@ -127,13 +127,13 @@ namespace TomatenMusic
                 Services = ServiceProvider
             });
             
-            slash.RegisterCommands<MusicCommands>(888493810554900491);
-            slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
-            slash.RegisterCommands<PlayNowGroup>(888493810554900491);
+            //slash.RegisterCommands<MusicCommands>(888493810554900491);
+            //slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
+            //slash.RegisterCommands<PlayNowGroup>(888493810554900491);
 
-            //slash.RegisterCommands<MusicCommands>();
-            //slash.RegisterCommands<PlayQueueGroup>();
-            //slash.RegisterCommands<PlayNowGroup>();
+            slash.RegisterCommands<MusicCommands>();
+            slash.RegisterCommands<PlayQueueGroup>();
+            slash.RegisterCommands<PlayNowGroup>();
 
             await client.StartAsync();
             client.Ready += Client_Ready;
