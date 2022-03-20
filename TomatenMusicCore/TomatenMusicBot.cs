@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
-using DSharpPlus.Net;
 using System.Linq;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.EventArgs;
@@ -77,7 +76,6 @@ namespace TomatenMusic
 
                     })
 
-                    // Lavalink
                     .AddSingleton<IDiscordClientWrapper, DiscordShardedClientWrapper>()
                     .AddSingleton<IAudioService, LavalinkNode>()
                     .AddSingleton(new InactivityTrackingOptions
