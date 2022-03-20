@@ -186,7 +186,7 @@ namespace TomatenMusic
             if (e.Exception is NotFoundException)
                 logger.LogDebug($"{ ((NotFoundException)e.Exception).JsonMessage }");
             if (e.Exception is BadRequestException)
-                logger.LogDebug($"{ ((BadRequestException)e.Exception).JsonMessage }");
+                logger.LogInformation($"{ ((BadRequestException)e.Exception).Errors }");
             return Task.CompletedTask;
 
         }

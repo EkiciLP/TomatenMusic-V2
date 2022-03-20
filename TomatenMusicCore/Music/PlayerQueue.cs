@@ -40,8 +40,10 @@ namespace TomatenMusic.Music
         {
             return Task.Run(() =>
             {
-                if (CurrentPlaylist == null)
+                if (CurrentPlaylist == null && Queue.Count == 0)
                     CurrentPlaylist = playlist;
+                else
+                    CurrentPlaylist = null;
 
                 _logger.LogInformation("Queued Playlist {0}", playlist.Name);
                 foreach (LavalinkTrack track in playlist.Tracks)

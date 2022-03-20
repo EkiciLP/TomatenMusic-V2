@@ -104,9 +104,9 @@ namespace TomatenMusic.Util
                 .WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString())
                 .WithTitle(playlist.Name)
                 .WithUrl(playlist.Url)
-                .WithDescription(playlist.Description)
+                .WithDescription(TrackListString(playlist.Tracks))
                 .WithImageUrl(youtubePlaylist.Thumbnail)
-                .AddField("Tracks", TrackListString(playlist.Tracks), false)
+                .AddField("Description", playlist.Description, false)
                 .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
                 .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
                 .AddField("Create Date", $"{youtubePlaylist.CreationTime:dd. MMMM, yyyy}", true);
@@ -115,17 +115,21 @@ namespace TomatenMusic.Util
             {
                 SpotifyPlaylist spotifyPlaylist = (SpotifyPlaylist)playlist;
                 builder
-                .WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), spotifyPlaylist.AuthorThumbnail.ToString())
                 .WithTitle(playlist.Name)
                 .WithUrl(playlist.Url)
-                .WithDescription(playlist.Description)
-                .AddField("Tracks", TrackListString(playlist.Tracks), false)
+                .WithDescription(TrackListString(playlist.Tracks))
+                .AddField("Description", playlist.Description, false)
                 .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
                 .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
                 .AddField("Spotify Followers", $"{spotifyPlaylist.Followers:N0}", true);
+                if (spotifyPlaylist.AuthorThumbnail != null)
+                {
+                    builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), spotifyPlaylist.AuthorThumbnail.ToString());
+                }else
+                    builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString());
             }
 
-            return builder;
+            return builder.Build();
         }
 
         public static DiscordEmbed GetQueueEmbed(GuildPlayer player)
@@ -161,9 +165,9 @@ namespace TomatenMusic.Util
             foreach (LavalinkTrack track in tracks)
             {
                 FullTrackContext context = (FullTrackContext)track.Context;
-                if (count > 15)
+                if (count > 10)
                 {
-                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - 15));
+                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - 10));
                     break;
                 }
 
