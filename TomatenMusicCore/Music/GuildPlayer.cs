@@ -134,7 +134,6 @@ namespace TomatenMusic.Music
 
         public async Task PlayPlaylistNowAsync(LavalinkPlaylist playlist)
         {
-
             EnsureConnected();
             EnsureNotDestroyed();
             if (!PlayerQueue.Queue.Any())
@@ -159,8 +158,16 @@ namespace TomatenMusic.Music
 
         public async Task RewindAsync()
         {
-            MusicActionResponse response = PlayerQueue.Rewind();
+            EnsureNotDestroyed();
+            EnsureConnected();
+            if (Position.Position.Seconds < 4)
+            {
+                await ReplayAsync();
+                return;
+            }
 
+            MusicActionResponse response = PlayerQueue.Rewind();
+            
             _logger.LogInformation($"Rewinded Track {CurrentTrack.Title} for Track {response.Track.Title}");
             await base.PlayAsync(response.Track);
             QueuePrompt.UpdateFor(GuildId);
@@ -168,6 +175,8 @@ namespace TomatenMusic.Music
 
         public async Task SkipAsync()
         {
+            EnsureNotDestroyed();
+            EnsureConnected();
             MusicActionResponse response = PlayerQueue.NextTrack(true);
 
             _logger.LogInformation($"Skipped Track {CurrentTrack.Title} for Track {response.Track.Title}");
