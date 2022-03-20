@@ -14,11 +14,13 @@ namespace TomatenMusic.Music
     {
         public ISpotifyService _spotifyService { get; set; }
         public IAudioService _audioService { get; set; }
+        public YoutubeService _youtubeService { get; set; }
 
-        public TrackProvider(ISpotifyService spotify, IAudioService audioService)
+        public TrackProvider(ISpotifyService spotify, IAudioService audioService, YoutubeService youtubeService)
         {
             _audioService = audioService;
             _spotifyService = spotify;
+            _youtubeService = youtubeService;
         }
 
         public async Task<MusicActionResponse> SearchAsync(string query, bool withSearchResults = false)
@@ -55,7 +57,7 @@ namespace TomatenMusic.Music
 
             if (loadResult.LoadType == TrackLoadType.PlaylistLoaded && !isSearch)
                 return new MusicActionResponse(
-                    playlist: new YoutubePlaylist(loadResult.PlaylistInfo.Name, await FullTrackContext.PopulateTracksAsync(loadResult.Tracks), uri));
+                    playlist: await _youtubeService.PopulatePlaylistAsync(new YoutubePlaylist(loadResult.PlaylistInfo.Name, await FullTrackContext.PopulateTracksAsync(loadResult.Tracks), uri)));
             else
                 return new MusicActionResponse(await FullTrackContext.PopulateAsync(loadResult.Tracks.First()));
 
