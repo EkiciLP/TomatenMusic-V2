@@ -39,7 +39,9 @@ namespace TomatenMusic.Services
                 context.YoutubeAuthorSubs = (ulong) channel.Statistics.SubscriberCount;
             context.YoutubeAuthorThumbnail = new Uri(channel.Snippet.Thumbnails.High.Url);
             context.YoutubeAuthorUri = new Uri($"https://www.youtube.com/channel/{channel.Id}");
-            context.YoutubeDescription = video.Snippet.Description;
+            string desc = video.Snippet.Description;
+
+            context.YoutubeDescription = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
             if (video.Statistics.LikeCount != null)
                 context.YoutubeLikes = (ulong) video.Statistics.LikeCount;
             context.YoutubeTags = video.Snippet.Tags;
@@ -66,7 +68,10 @@ namespace TomatenMusic.Services
 
             string desc = list.Snippet.Description;
 
-            playlist.Description = desc.Substring(0, Math.Min(desc.Length, 4092)) + (desc.Length > 4092 ? "..." : " ");
+            playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
+            if (playlist.Description == "")
+                playlist.Description = "None";
+
             playlist.Thumbnail = new Uri(list.Snippet.Thumbnails.High.Url);
             playlist.CreationTime = (DateTime)list.Snippet.PublishedAt;
             playlist.YoutubeItem = list;

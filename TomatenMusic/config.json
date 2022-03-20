@@ -1,8 +1,8 @@
 ﻿{
-  "TOKEN": "YOUR_BOT_TOKEN",
+  "TOKEN": "Bot_Token",
   "LavaLinkPassword": " ",
   "SpotifyClientId": " ",
   "SpotifyClientSecret": " ",
   "YoutubeApiKey": " "
-
 }
+

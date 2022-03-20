@@ -206,14 +206,14 @@ namespace TomatenMusic.Commands
                     }
                 }
 
-                try
+            try
                 {
                     if (response.isPlaylist)
                     {
                         LavalinkPlaylist playlist = response.Playlist;
                         await player.PlayPlaylistAsync(playlist);
 
-                        _ = ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Now Playing:").AddEmbed(
+                        await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Now Playing:").AddEmbed(
                         Common.AsEmbed(playlist)
                         ));
 
@@ -231,7 +231,7 @@ namespace TomatenMusic.Commands
                 catch (Exception ex)
                 {
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
-                     .WithContent($"❌ An error occured while playing your Track: ``{ex.Message}``")
+                     .WithContent($"❌ An error occured while playing your Track: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
                     return;
                 }

@@ -70,7 +70,7 @@ namespace TomatenMusic.Services
 
                     if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
 
-                    tracks.Add(await FullTrackContext.PopulateAsync(track, sTrack.Uri));
+                    tracks.Add(await FullTrackContext.PopulateAsync(track, sTrack.Uri.Replace("spotify:track:", "")));
                 }
                 Uri uri;
                 Uri.TryCreate(url, UriKind.Absolute, out uri);
@@ -98,7 +98,7 @@ namespace TomatenMusic.Services
 
                         if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
 
-                        tracks.Add(await FullTrackContext.PopulateAsync(track, fullTrack.Uri));
+                        tracks.Add(await FullTrackContext.PopulateAsync(track, fullTrack.Uri.Replace("spotify:track:", "")));
                     }
 
                 }
@@ -115,23 +115,35 @@ namespace TomatenMusic.Services
         public async Task<SpotifyPlaylist> PopulateSpotifyPlaylistAsync(SpotifyPlaylist playlist)
         {
             var list = await this.Playlists.Get(playlist.Identifier);
-            playlist.Description = list.Description;
-            playlist.AuthorUri = new Uri(list.Owner.Uri);
+            string desc = list.Description;
+
+            playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
+            if (playlist.Description.Length < 2)
+                playlist.Description = "None";
+
+            playlist.AuthorUri = new Uri($"https://open.spotify.com/user/{list.Owner.Id}");
             playlist.AuthorName = list.Owner.DisplayName;
             playlist.Followers = list.Followers.Total;
-            playlist.Url = new Uri(list.Uri);
-            playlist.AuthorThumbnail = new Uri(list.Owner.Images.First().Url);
+            playlist.Url = new Uri($"https://open.spotify.com/playlist/{playlist.Identifier}");
+            try
+            {
+                playlist.AuthorThumbnail = new Uri(list.Owner.Images.First().Url);
+            }
+            catch (Exception ex) { }
+
             return playlist;
         }
 
         public async Task<SpotifyPlaylist> PopulateSpotifyAlbumAsync(SpotifyPlaylist playlist)
         {
             var list = await this.Albums.Get(playlist.Identifier);
-            playlist.Description = list.Label;
-            playlist.AuthorUri = new Uri(list.Artists.First().Uri);
+            string desc = list.Label;
+
+            playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
+            playlist.AuthorUri = new Uri($"https://open.spotify.com/user/{list.Artists.First().Uri}");
             playlist.AuthorName = list.Artists.First().Name;
             playlist.Followers = list.Popularity;
-            playlist.Url = new Uri(list.Uri);
+            playlist.Url = new Uri($"https://open.spotify.com/album/{playlist.Identifier}");
 
             return playlist;
         }
@@ -147,7 +159,7 @@ namespace TomatenMusic.Services
             context.SpotifyAlbum = spotifyTrack.Album;
             context.SpotifyArtists = spotifyTrack.Artists;
             context.SpotifyPopularity = spotifyTrack.Popularity;
-            context.SpotifyUri = new Uri(spotifyTrack.Uri);
+            context.SpotifyUri = new Uri($"https://open.spotify.com/track/{context.SpotifyIdentifier}");
             track.Context = context;
 
             return track;

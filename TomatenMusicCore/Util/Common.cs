@@ -104,9 +104,9 @@ namespace TomatenMusic.Util
                 .WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString())
                 .WithTitle(playlist.Name)
                 .WithUrl(playlist.Url)
-                .WithDescription(playlist.Description)
+                .WithDescription(TrackListString(playlist.Tracks))
                 .WithImageUrl(youtubePlaylist.Thumbnail)
-                .AddField("Tracks", TrackListString(playlist.Tracks), false)
+                .AddField("Description", playlist.Description, false)
                 .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
                 .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
                 .AddField("Create Date", $"{youtubePlaylist.CreationTime:dd. MMMM, yyyy}", true);
@@ -115,17 +115,21 @@ namespace TomatenMusic.Util
             {
                 SpotifyPlaylist spotifyPlaylist = (SpotifyPlaylist)playlist;
                 builder
-                .WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), spotifyPlaylist.AuthorThumbnail.ToString())
                 .WithTitle(playlist.Name)
                 .WithUrl(playlist.Url)
-                .WithDescription(playlist.Description)
-                .AddField("Tracks", TrackListString(playlist.Tracks), false)
+                .WithDescription(TrackListString(playlist.Tracks))
+                .AddField("Description", playlist.Description, false)
                 .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
                 .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
                 .AddField("Spotify Followers", $"{spotifyPlaylist.Followers:N0}", true);
+                if (spotifyPlaylist.AuthorThumbnail != null)
+                {
+                    builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), spotifyPlaylist.AuthorThumbnail.ToString());
+                }else
+                    builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString());
             }
 
-            return builder;
+            return builder.Build();
         }
 
         public static DiscordEmbed GetQueueEmbed(GuildPlayer player)
@@ -161,9 +165,9 @@ namespace TomatenMusic.Util
             foreach (LavalinkTrack track in tracks)
             {
                 FullTrackContext context = (FullTrackContext)track.Context;
-                if (count > 15)
+                if (count > 10)
                 {
-                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - 15));
+                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - 10));
                     break;
                 }
 
@@ -258,17 +262,18 @@ namespace TomatenMusic.Util
             FullTrackContext context = (FullTrackContext)track.Context;
 
             string progressBar = $"|{ProgressBar((int)player.Position.Position.TotalSeconds, (int)track.Duration.TotalSeconds)}|\n [{Common.GetTimestamp(player.Position.Position)}/{Common.GetTimestamp(track.Duration)}]";
-
-            builder.WithAuthor(track.Author, context.YoutubeAuthorUri.ToString(), context.YoutubeAuthorThumbnail.ToString());
+            
+            builder.WithAuthor(track.Author);
             builder.WithTitle(track.Title);
-            builder.WithUrl(context.YoutubeUri);
-            builder.WithImageUrl(context.YoutubeThumbnail);
+            builder.WithUrl(track.Source);
             builder.WithColor(player.State == PlayerState.Paused ? DiscordColor.Orange : DiscordColor.Green);
             builder.AddField("Length", Common.GetTimestamp(track.Duration), true);
             builder.AddField("Loop", player.PlayerQueue.LoopType.ToString(), true);
             builder.AddField("Progress", progressBar, true);
             if (!context.IsFile)
             {
+                builder.WithAuthor(track.Author, context.YoutubeAuthorUri.ToString(), context.YoutubeAuthorThumbnail.ToString());
+                builder.WithImageUrl(context.YoutubeThumbnail);
                 builder.AddField("Views", $"{context.YoutubeViews:N0} Views", true);
                 builder.AddField("Rating", $"{context.YoutubeLikes:N0} 👍", true);
                 builder.AddField("Upload Date", $"{context.YoutubeUploadDate.ToString("dd. MMMM, yyyy")}", true);

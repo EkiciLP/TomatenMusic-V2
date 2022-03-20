@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Entities;
-using DSharpPlus.Net;
 using System.Linq;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.EventArgs;
@@ -77,7 +76,6 @@ namespace TomatenMusic
 
                     })
 
-                    // Lavalink
                     .AddSingleton<IDiscordClientWrapper, DiscordShardedClientWrapper>()
                     .AddSingleton<IAudioService, LavalinkNode>()
                     .AddSingleton(new InactivityTrackingOptions
@@ -114,7 +112,6 @@ namespace TomatenMusic
         {
             await BuildServiceProvider();
 
-            //_ = _host.StartAsync();
 
             _host.Start();
             var client = ServiceProvider.GetRequiredService<DiscordShardedClient>();
@@ -126,15 +123,10 @@ namespace TomatenMusic
             {
                 Services = ServiceProvider
             });
-            /*
-            slash.RegisterCommands<MusicCommands>(888493810554900491);
-            slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
-            slash.RegisterCommands<PlayNowGroup>(888493810554900491);
-
-            slash.RegisterCommands<MusicCommands>(835089895092387872);
-            slash.RegisterCommands<PlayQueueGroup>(835089895092387872);
-            slash.RegisterCommands<PlayNowGroup>(835089895092387872);
-            */
+            
+            //slash.RegisterCommands<MusicCommands>(888493810554900491);
+            //slash.RegisterCommands<PlayQueueGroup>(888493810554900491);
+            //slash.RegisterCommands<PlayNowGroup>(888493810554900491);
 
             slash.RegisterCommands<MusicCommands>();
             slash.RegisterCommands<PlayQueueGroup>();
@@ -194,7 +186,7 @@ namespace TomatenMusic
             if (e.Exception is NotFoundException)
                 logger.LogDebug($"{ ((NotFoundException)e.Exception).JsonMessage }");
             if (e.Exception is BadRequestException)
-                logger.LogDebug($"{ ((BadRequestException)e.Exception).JsonMessage }");
+                logger.LogInformation($"{ ((BadRequestException)e.Exception).Errors }");
             return Task.CompletedTask;
 
         }
