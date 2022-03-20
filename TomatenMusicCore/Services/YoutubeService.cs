@@ -53,7 +53,7 @@ namespace TomatenMusic.Services
             return track;
         }
 
-        public async Task<List<LavalinkTrack>> PopulateMultiTrackListAsync(IEnumerable<LavalinkTrack> tracks)
+        public async Task<List<LavalinkTrack>> PopulateTrackListAsync(IEnumerable<LavalinkTrack> tracks)
         {
             List<LavalinkTrack> newTracks = new List<LavalinkTrack>();
             foreach (var track in tracks)
@@ -69,14 +69,14 @@ namespace TomatenMusic.Services
             string desc = list.Snippet.Description;
 
             playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
-            if (playlist.Description == "")
+            if (playlist.Description.Length < 2)
                 playlist.Description = "None";
 
             playlist.Thumbnail = new Uri(list.Snippet.Thumbnails.High.Url);
             playlist.CreationTime = (DateTime)list.Snippet.PublishedAt;
             playlist.YoutubeItem = list;
             playlist.AuthorThumbnail = new Uri(channel.Snippet.Thumbnails.High.Url);
-            playlist.AuthorUri = new Uri($"https://www.youtube.com/playlist?list={playlist.Identifier}");
+            playlist.AuthorUri = new Uri($"https://www.youtube.com/channels/{channel.Id}");
 
             return playlist;
         }

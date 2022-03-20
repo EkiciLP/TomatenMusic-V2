@@ -46,7 +46,6 @@ namespace TomatenMusic.Music.Entitites
             context.SpotifyIdentifier = spotifyIdentifier;
             context.YoutubeUri = new Uri($"https://youtu.be/{track.TrackIdentifier}");
             track.Context = context;
-            Console.WriteLine(context);
             await youtubeService.PopulateTrackInfoAsync(track);
             await spotifyService.PopulateTrackAsync(track);
             
