@@ -34,7 +34,7 @@ namespace TomatenMusic.Music.Entitites
         public int SpotifyPopularity { get; set; }
         public Uri SpotifyUri { get; set; }
 
-        public static async Task<LavalinkTrack> PopulateAsync(LavalinkTrack track, string spotifyIdentifier = null)
+        public static async Task<LavalinkTrack> PopulateAsync(LavalinkTrack track, FullTrack spotifyTrack = null, string spotifyId = null)
         {
             FullTrackContext context = (FullTrackContext)track.Context;
 
@@ -43,11 +43,15 @@ namespace TomatenMusic.Music.Entitites
 
             var spotifyService = TomatenMusicBot.ServiceProvider.GetRequiredService<ISpotifyService>();
             var youtubeService = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
-            context.SpotifyIdentifier = spotifyIdentifier;
-            context.YoutubeUri = new Uri($"https://youtu.be/{track.TrackIdentifier}");
+            if (spotifyId != null)
+                context.SpotifyIdentifier = spotifyId;
+            else if (spotifyTrack != null)
+                context.SpotifyIdentifier = spotifyTrack.Id;
+                
+            context.YoutubeUri = new Uri(track.Source);
             track.Context = context;
             await youtubeService.PopulateTrackInfoAsync(track);
-            await spotifyService.PopulateTrackAsync(track);
+            await spotifyService.PopulateTrackAsync(track, spotifyTrack);
             
             return track;
         }
