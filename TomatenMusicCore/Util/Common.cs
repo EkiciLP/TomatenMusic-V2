@@ -100,28 +100,28 @@ namespace TomatenMusic.Util
             if (playlist is YoutubePlaylist)
             {
                 YoutubePlaylist youtubePlaylist = (YoutubePlaylist)playlist;
-                builder
-                .WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString())
-                .WithTitle(playlist.Name)
-                .WithUrl(playlist.Url)
-                .WithDescription(TrackListString(playlist.Tracks))
-                .WithImageUrl(youtubePlaylist.Thumbnail)
-                .AddField("Description", playlist.Description, false)
-                .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
-                .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
-                .AddField("Create Date", $"{youtubePlaylist.CreationTime:dd. MMMM, yyyy}", true);
+
+                builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString());
+                builder.WithTitle(playlist.Name);
+                builder.WithUrl(playlist.Url);
+                builder.WithDescription(TrackListString(playlist.Tracks));
+                builder.WithImageUrl(youtubePlaylist.Thumbnail);
+                builder.AddField("Description", playlist.Description, false);
+                builder.AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true);
+                builder.AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true);
+                builder.AddField("Create Date", $"{youtubePlaylist.CreationTime:dd. MMMM, yyyy}", true);
                 
             }else if (playlist is SpotifyPlaylist)
             {
                 SpotifyPlaylist spotifyPlaylist = (SpotifyPlaylist)playlist;
-                builder
-                .WithTitle(playlist.Name)
-                .WithUrl(playlist.Url)
-                .WithDescription(TrackListString(playlist.Tracks))
-                .AddField("Description", playlist.Description, false)
-                .AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true)
-                .AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true)
-                .AddField("Spotify Followers", $"{spotifyPlaylist.Followers:N0}", true);
+
+                builder.WithTitle(playlist.Name);
+                builder.WithUrl(playlist.Url);
+                builder.WithDescription(TrackListString(playlist.Tracks));
+                builder.AddField("Description", playlist.Description, false);
+                builder.AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true);
+                builder.AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true);
+                builder.AddField("Spotify Followers", $"{spotifyPlaylist.Followers:N0}", true);
                 if (spotifyPlaylist.AuthorThumbnail != null)
                 {
                     builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), spotifyPlaylist.AuthorThumbnail.ToString());
@@ -150,10 +150,11 @@ namespace TomatenMusic.Util
             builder.AddField("Length", GetTimestamp(timeSpan), true);
             builder.AddField("Loop Type", player.PlayerQueue.LoopType.ToString(), true);
             builder.AddField("Autoplay", player.Autoplay ? "✅" : "❌", true);
-            if (player.PlayerQueue.PlayedTracks.Any())
-                builder.AddField("History", TrackListString(player.PlayerQueue.PlayedTracks), true);
             if (player.PlayerQueue.CurrentPlaylist != null)
                 builder.AddField("Current Playlist", $"[{player.PlayerQueue.CurrentPlaylist.Name}]({player.PlayerQueue.CurrentPlaylist.Url})", true);
+
+            if (player.PlayerQueue.PlayedTracks.Any())
+                builder.AddField("History", TrackListString(player.PlayerQueue.PlayedTracks), true);
 
             return builder;
         }

@@ -4,6 +4,8 @@ using System.Text;
 using System.Linq;
 using Google.Apis.YouTube.v3.Data;
 using Lavalink4NET.Player;
+using Microsoft.Extensions.DependencyInjection;
+using TomatenMusic.Services;
 
 namespace TomatenMusic.Music.Entitites
 {
@@ -28,11 +30,12 @@ namespace TomatenMusic.Music.Entitites
 
         public YoutubePlaylist(string name, IEnumerable<LavalinkTrack> tracks, Uri uri)
         {
-            Identifier = uri.ToString().Replace("https://www.youtube.com/playlist?list=", "");
+            Identifier = uri.ToString().Replace("https://www.youtube.com/playlist?list=", "").Replace("https://youtube.com/playlist?list=", "");
             Name = name;
             Tracks = tracks;
             Url = uri;
             TrackCount = tracks.Count();
+
         }
     }
 }
