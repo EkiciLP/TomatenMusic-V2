@@ -11,6 +11,7 @@ using TomatenMusic.Services;
 using TomatenMusic.Music;
 using Lavalink4NET;
 using Lavalink4NET.Player;
+using System.Runtime.Caching;
 
 namespace TomatenMusic.Services
 {
@@ -18,9 +19,9 @@ namespace TomatenMusic.Services
     public interface ISpotifyService
     {
         public Task<MusicActionResponse> ConvertURL(string url);
-        public Task<SpotifyPlaylist> PopulateSpotifyPlaylistAsync(SpotifyPlaylist playlist);
-        public Task<SpotifyPlaylist> PopulateSpotifyAlbumAsync(SpotifyPlaylist playlist);
-        public Task<LavalinkTrack> PopulateTrackAsync(LavalinkTrack track);
+        public Task<SpotifyPlaylist> PopulateSpotifyPlaylistAsync(SpotifyPlaylist playlist, FullPlaylist spotifyPlaylist = null);
+        public Task<SpotifyPlaylist> PopulateSpotifyAlbumAsync(SpotifyPlaylist playlist, FullAlbum spotifyAlbum = null);
+        public Task<LavalinkTrack> PopulateTrackAsync(LavalinkTrack track, FullTrack spotifyFullTrack = null);
 
     }
 
@@ -29,10 +30,13 @@ namespace TomatenMusic.Services
         public ILogger _logger { get; set; }
         public IAudioService _audioService { get; set; }
 
+        public ObjectCache Cache { get; set; }
+
         public SpotifyService(SpotifyClientConfig config, ILogger<SpotifyService> logger, IAudioService audioService) : base(config)
         {
             _logger = logger;
             _audioService = audioService;
+            Cache = MemoryCache.Default;
         }
 
         public async Task<MusicActionResponse> ConvertURL(string url)
@@ -43,9 +47,11 @@ namespace TomatenMusic.Services
                 .Replace("https://open.spotify.com/playlist/", "")
                 .Substring(0, 22);
 
+            _logger.LogDebug($"Starting spotify conversion for: {url}");
+
             if (url.StartsWith("https://open.spotify.com/track"))
             {
-                FullTrack sTrack = await Tracks.Get(trackId);
+                FullTrack sTrack = Cache.Contains(trackId) ? Cache.Get(trackId) as FullTrack : await Tracks.Get(trackId);
 
                 _logger.LogInformation($"Searching youtube from spotify with query: {sTrack.Name} {String.Join(" ", sTrack.Artists)}");
 
@@ -53,39 +59,43 @@ namespace TomatenMusic.Services
 
                 if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
 
-                return new MusicActionResponse(await FullTrackContext.PopulateAsync(track, trackId));
+                Cache.Add(trackId, sTrack, DateTimeOffset.MaxValue);
+
+                return new MusicActionResponse(await FullTrackContext.PopulateAsync(track, sTrack));
 
             }
             else if (url.StartsWith("https://open.spotify.com/album"))
             {
                 List<LavalinkTrack> tracks = new List<LavalinkTrack>();
 
-                FullAlbum album = await Albums.Get(trackId);
+                FullAlbum album = Cache.Contains(trackId) ? Cache.Get(trackId) as FullAlbum : await Albums.Get(trackId);
 
                 foreach (var sTrack in await PaginateAll(album.Tracks))
                 {
                     _logger.LogInformation($"Searching youtube from spotify with query: {sTrack.Name} {String.Join(" ", sTrack.Artists.ConvertAll(artist => artist.Name))}");
-
                     var track = await _audioService.GetTrackAsync($"{sTrack.Name} {String.Join(" ", sTrack.Artists.ConvertAll(artist => artist.Name))}", Lavalink4NET.Rest.SearchMode.YouTube);
 
                     if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
-
-                    tracks.Add(await FullTrackContext.PopulateAsync(track, sTrack.Uri.Replace("spotify:track:", "")));
+                    
+                    tracks.Add(await FullTrackContext.PopulateAsync(track, spotifyId: sTrack.Uri.Replace("spotify:track:", "")));
                 }
                 Uri uri;
                 Uri.TryCreate(url, UriKind.Absolute, out uri);
 
                 SpotifyPlaylist playlist = new SpotifyPlaylist(album.Name, album.Id, tracks, uri);
-                await PopulateSpotifyAlbumAsync(playlist);
+                await PopulateSpotifyAlbumAsync(playlist, album);
+
+                Cache.Add(trackId, album, DateTimeOffset.MaxValue);
 
                 return new MusicActionResponse(playlist: playlist);
 
             }
             else if (url.StartsWith("https://open.spotify.com/playlist"))
             {
+
                 List<LavalinkTrack> tracks = new List<LavalinkTrack>();
 
-                FullPlaylist spotifyPlaylist = await Playlists.Get(trackId);
+                FullPlaylist spotifyPlaylist = Cache.Contains(trackId) ? Cache.Get(trackId) as FullPlaylist : await Playlists.Get(trackId);
                 
                 foreach (var sTrack in await PaginateAll(spotifyPlaylist.Tracks))
                 {
@@ -98,23 +108,28 @@ namespace TomatenMusic.Services
 
                         if (track == null) throw new ArgumentException("This Spotify Track was not found on Youtube");
 
-                        tracks.Add(await FullTrackContext.PopulateAsync(track, fullTrack.Uri.Replace("spotify:track:", "")));
+                        tracks.Add(await FullTrackContext.PopulateAsync(track, fullTrack));
                     }
 
                 }
                 Uri uri;
                 Uri.TryCreate(url, UriKind.Absolute, out uri);
                 SpotifyPlaylist playlist = new SpotifyPlaylist(spotifyPlaylist.Name, spotifyPlaylist.Id, tracks, uri);
-                await PopulateSpotifyPlaylistAsync(playlist);
+                await PopulateSpotifyPlaylistAsync(playlist, spotifyPlaylist);
+
+                Cache.Add(trackId, spotifyPlaylist, DateTimeOffset.MaxValue);
 
                 return new MusicActionResponse(playlist: playlist);
             }
             return null;
         }
    
-        public async Task<SpotifyPlaylist> PopulateSpotifyPlaylistAsync(SpotifyPlaylist playlist)
+        public async Task<SpotifyPlaylist> PopulateSpotifyPlaylistAsync(SpotifyPlaylist playlist, FullPlaylist spotifyPlaylist = null)
         {
-            var list = await this.Playlists.Get(playlist.Identifier);
+            FullPlaylist list = spotifyPlaylist;
+            if (list == null) 
+                list = await this.Playlists.Get(playlist.Identifier);
+
             string desc = list.Description;
 
             playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
@@ -134,9 +149,12 @@ namespace TomatenMusic.Services
             return playlist;
         }
 
-        public async Task<SpotifyPlaylist> PopulateSpotifyAlbumAsync(SpotifyPlaylist playlist)
+        public async Task<SpotifyPlaylist> PopulateSpotifyAlbumAsync(SpotifyPlaylist playlist, FullAlbum spotifyAlbum = null)
         {
-            var list = await this.Albums.Get(playlist.Identifier);
+            FullAlbum list = spotifyAlbum;
+            if (list == null)
+                list = await this.Albums.Get(playlist.Identifier);
+
             string desc = list.Label;
 
             playlist.Description = desc.Substring(0, Math.Min(desc.Length, 1024)) + (desc.Length > 1020 ? "..." : " ");
@@ -148,13 +166,15 @@ namespace TomatenMusic.Services
             return playlist;
         }
 
-        public async Task<LavalinkTrack> PopulateTrackAsync(LavalinkTrack track)
+        public async Task<LavalinkTrack> PopulateTrackAsync(LavalinkTrack track, FullTrack spotifyFullTrack)
         {
             FullTrackContext context = (FullTrackContext)track.Context;
             if (context.SpotifyIdentifier == null)
                 return track;
 
-            var spotifyTrack = await this.Tracks.Get(context.SpotifyIdentifier);
+            FullTrack spotifyTrack = spotifyFullTrack;
+            if (spotifyTrack == null)
+                spotifyTrack = await Tracks.Get(context.SpotifyIdentifier);
 
             context.SpotifyAlbum = spotifyTrack.Album;
             context.SpotifyArtists = spotifyTrack.Artists;

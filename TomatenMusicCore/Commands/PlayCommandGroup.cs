@@ -5,6 +5,7 @@ using Lavalink4NET.Player;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using TomatenMusic.Commands.Checks;
@@ -35,6 +36,8 @@ namespace TomatenMusic.Commands
             [OnlyGuildCheck]
             public async Task PlayQueryCommand(InteractionContext ctx, [Option("query", "The song search query.")] string query)
             {
+            var sw = Stopwatch.StartNew();
+
                 await ctx.DeferAsync(true);
 
                 GuildPlayer player = (GuildPlayer)_audioService.GetPlayer(ctx.Guild.Id);
@@ -50,7 +53,9 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
 
                 try
@@ -66,7 +71,9 @@ namespace TomatenMusic.Commands
                         await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                          .WithContent($"❌ An error occured while connecting to your Channel: ``{ex.Message}``")
                           );
-                        return;
+                    sw.Stop();
+                    _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                    return;
                     }
                 }
 
@@ -97,9 +104,13 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while playing your Query: ``{ex.Message}``")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
-            }
+            sw.Stop();
+            _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+        }
 
             [SlashCommand("file", "Play a song file. (mp3/mp4)")]
             [UserInVoiceChannelCheck]
@@ -107,8 +118,9 @@ namespace TomatenMusic.Commands
             [OnlyGuildCheck]
             public async Task PlayFileCommand(InteractionContext ctx, [Option("File", "The File that should be played.")] DiscordAttachment file)
             {
+            var sw = Stopwatch.StartNew();
 
-                await ctx.DeferAsync(true);
+            await ctx.DeferAsync(true);
 
                 GuildPlayer player = (GuildPlayer)_audioService.GetPlayer(ctx.Guild.Id);
 
@@ -123,7 +135,9 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while resolving your file: ``{ex.Message}``")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
 
                 try
@@ -138,7 +152,9 @@ namespace TomatenMusic.Commands
                         await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                          .WithContent($"❌ An error occured while connecting to your Channel: ``{ex.Message}``")
                           );
-                        return;
+                    sw.Stop();
+                    _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                    return;
                     }
                 }
 
@@ -148,7 +164,9 @@ namespace TomatenMusic.Commands
                     .AddEmbed(Common.AsEmbed(track, player.PlayerQueue.LoopType, 0)));
 
                 await player.PlayNowAsync(response.Track);
-            }
+            sw.Stop();
+            _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+        }
         }
 
         [SlashCommandGroup("play", "Queues or plays the Song")]
@@ -172,7 +190,9 @@ namespace TomatenMusic.Commands
             [OnlyGuildCheck]
             public async Task PlayQueryCommand(InteractionContext ctx, [Option("query", "The song search query.")] string query)
             {
-                await ctx.DeferAsync(true);
+            var sw = Stopwatch.StartNew();
+
+            await ctx.DeferAsync(true);
 
                 GuildPlayer player = (GuildPlayer)_audioService.GetPlayer(ctx.Guild.Id);
 
@@ -187,7 +207,9 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while resolving your query: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
 
                 try
@@ -202,7 +224,9 @@ namespace TomatenMusic.Commands
                         await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                          .WithContent($"❌ An error occured while connecting to your Channel: ``{ex.Message}``")
                           );
-                        return;
+                    sw.Stop();
+                    _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                    return;
                     }
                 }
 
@@ -233,9 +257,13 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while playing your Track: ``{ex.Message}``, ```{ex.StackTrace}```")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
-            }
+            sw.Stop();
+            _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+        }
 
             [SlashCommand("file", "Play a song file. (mp3/mp4)")]
             [UserInVoiceChannelCheck]
@@ -243,8 +271,9 @@ namespace TomatenMusic.Commands
             [OnlyGuildCheck]
             public async Task PlayFileCommand(InteractionContext ctx, [Option("File", "The File that should be played.")] DiscordAttachment file)
             {
+            var sw = Stopwatch.StartNew();
 
-                await ctx.DeferAsync(true);
+            await ctx.DeferAsync(true);
 
                 GuildPlayer player = (GuildPlayer)_audioService.GetPlayer(ctx.Guild.Id);
 
@@ -259,7 +288,9 @@ namespace TomatenMusic.Commands
                     await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                      .WithContent($"❌ An error occured while resolving your file: ``{ex.Message}``")
                       );
-                    return;
+                sw.Stop();
+                _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                return;
                 }
 
                 try
@@ -274,7 +305,9 @@ namespace TomatenMusic.Commands
                         await ctx.EditResponseAsync(new DiscordWebhookBuilder()
                          .WithContent($"❌ An error occured while connecting to your Channel: ``{ex.Message}``")
                           );
-                        return;
+                    sw.Stop();
+                    _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
+                    return;
                     }
                 }
 
@@ -284,6 +317,9 @@ namespace TomatenMusic.Commands
                     .AddEmbed(Common.AsEmbed(track, player.PlayerQueue.LoopType, player.State == PlayerState.NotPlaying ? 0 : player.PlayerQueue.Queue.Count + 1)));
 
                 await player.PlayAsync(response.Track);
+
+            sw.Stop();
+            _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");
             }
         }
 }
