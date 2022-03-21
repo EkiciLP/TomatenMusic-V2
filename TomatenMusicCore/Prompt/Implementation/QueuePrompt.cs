@@ -269,7 +269,10 @@ namespace TomatenMusic.Prompt.Implementation
 
         protected async override Task<DiscordMessageBuilder> GetMessageAsync()
         {
-            return new DiscordMessageBuilder().AddEmbed(Common.GetQueueEmbed(Player)).AddEmbed(await Common.CurrentSongEmbedAsync(Player)).AddEmbeds(Embeds);
+            return new DiscordMessageBuilder()
+                .AddEmbed(Common.GetQueueEmbed(Player))
+                .AddEmbed(await Common.CurrentSongEmbedAsync(Player))
+                .AddEmbeds(Embeds);
         }
     }
 }
