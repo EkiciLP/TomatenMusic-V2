@@ -39,9 +39,6 @@ namespace TomatenMusic.Music
             _spotify = serviceProvider.GetRequiredService<ISpotifyService>();
             _audioService = serviceProvider.GetRequiredService<IAudioService>();
         }
-
-        
-
         public async override Task PlayAsync(LavalinkTrack track, TimeSpan? startTime = null, TimeSpan? endTime = null, bool noReplace = true)
         {
 

@@ -2,29 +2,25 @@
 using Emzi0767.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using TomatenMusic_Api.Models;
+using TomatenMusic_Api.Models.EventArgs;
 
 namespace TomatenMusic_Api;
 
 public class InProcessEventBus
 {
-	public event AsyncEventHandler<InProcessEventBus, ChannelConnectEventArgs>? OnConnectRequest;
+	public event AsyncEventHandler<InProcessEventBus, ChannelConnectArgs>? OnConnectRequest;
 
-	public void OnConnectRequestEvent(ChannelConnectEventArgs e)
+	public event AsyncEventHandler<InProcessEventBus, ChannelDisconnectArgs>? OnDisconnectRequest;
+
+
+	public void OnConnectRequestEvent(ChannelConnectArgs e)
 	{
 		_ = OnConnectRequest?.Invoke(this, e);
 	}
 
-	public class ChannelConnectEventArgs : AsyncEventArgs
-    {
-		public ulong Guild_Id { get; set; }
-
-		public DiscordChannel Channel { get; set; }
-
-        public ChannelConnectEventArgs(ulong guild_Id, DiscordChannel channel)
-        {
-			Guild_Id = guild_Id;
-			Channel = channel;
-        }
+	public void OnDisconnectRequestEvent(ChannelDisconnectArgs e)
+	{
+		_ = OnDisconnectRequest?.Invoke(this, e);
 	}
 }
 

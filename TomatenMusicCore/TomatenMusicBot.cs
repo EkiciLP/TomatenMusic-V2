@@ -99,7 +99,8 @@ namespace TomatenMusic
                     .AddSingleton<YoutubeService>()
                     .AddSingleton<LyricsOptions>()
                     .AddSingleton<LyricsService>()
-                    .AddSingleton(SpotifyClientConfig.CreateDefault().WithAuthenticator(new ClientCredentialsAuthenticator(config.SpotifyClientId, config.SpotifyClientSecret))))
+                    .AddSingleton(
+                    SpotifyClientConfig.CreateDefault().WithAuthenticator(new ClientCredentialsAuthenticator(config.SpotifyClientId, config.SpotifyClientSecret))))
                 .Build();
 
             ServiceProvider = _host.Services;

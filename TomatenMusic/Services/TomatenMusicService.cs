@@ -2,6 +2,7 @@
 using TomatenMusic;
 using TomatenMusic.Music;
 using TomatenMusic_Api.Models;
+using TomatenMusic_Api.Models.EventArgs;
 using static TomatenMusic_Api.InProcessEventBus;
 
 namespace TomatenMusic_Api
@@ -24,11 +25,17 @@ namespace TomatenMusic_Api
 		private void Initialize()
 		{
             _inProcessEventBus.OnConnectRequest += _inProcessEventBus_OnConnectRequest;
+            _inProcessEventBus.OnDisconnectRequest += _inProcessEventBus_OnDisconnectRequest;
 		}
 
-        private async Task _inProcessEventBus_OnConnectRequest(InProcessEventBus sender, ChannelConnectEventArgs e)
+        private async Task _inProcessEventBus_OnDisconnectRequest(InProcessEventBus sender, ChannelDisconnectArgs e)
         {
-			_logger.LogInformation("Channel Connected!");
+            GuildPlayer player = _audioService.GetPlayer<GuildPlayer>(e.GuildId);
+			player.DisconnectAsync();
+        }
+
+        private async Task _inProcessEventBus_OnConnectRequest(InProcessEventBus sender, ChannelConnectArgs e)
+        {
 			GuildPlayer player = await _audioService.JoinAsync<GuildPlayer>(e.Guild_Id, e.Channel.Id, true);
         }
 
