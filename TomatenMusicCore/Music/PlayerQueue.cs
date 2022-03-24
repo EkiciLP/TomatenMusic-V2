@@ -18,7 +18,7 @@ namespace TomatenMusic.Music
         public Queue<LavalinkTrack> Queue { get; set; } = new Queue<LavalinkTrack>();
         public Queue<LavalinkTrack> PlayedTracks { get; set; } = new Queue<LavalinkTrack>();
         public ILogger<PlayerQueue> _logger { get; set; } = TomatenMusicBot.ServiceProvider.GetRequiredService<ILogger<PlayerQueue>>();
-        public LavalinkPlaylist CurrentPlaylist { get; set; }
+        public ILavalinkPlaylist CurrentPlaylist { get; set; }
 
         public LoopType LoopType { get; private set; } = LoopType.NONE;
 
@@ -36,7 +36,7 @@ namespace TomatenMusic.Music
                 QueueLoopList.Add(track);
         }
 
-        public Task QueuePlaylistAsync(LavalinkPlaylist playlist)
+        public Task QueuePlaylistAsync(ILavalinkPlaylist playlist)
         {
             return Task.Run(() =>
             {

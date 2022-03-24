@@ -9,7 +9,7 @@ using TomatenMusic.Services;
 
 namespace TomatenMusic.Music.Entitites
 {
-    public class YoutubePlaylist : LavalinkPlaylist
+    public class YoutubePlaylist : ILavalinkPlaylist
     {
         public string Name { get; }
 

@@ -92,7 +92,7 @@ namespace TomatenMusic.Util
             return builder;
         }
 
-        public static DiscordEmbed AsEmbed(LavalinkPlaylist playlist)
+        public static DiscordEmbed AsEmbed(ILavalinkPlaylist playlist)
         {
 
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
@@ -100,7 +100,7 @@ namespace TomatenMusic.Util
             if (playlist is YoutubePlaylist)
             {
                 YoutubePlaylist youtubePlaylist = (YoutubePlaylist)playlist;
-
+                Console.WriteLine($"{playlist.AuthorName}, {playlist.AuthorUri.ToString()}, {playlist.AuthorThumbnail.ToString()}");
                 builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString());
                 builder.WithTitle(playlist.Name);
                 builder.WithUrl(playlist.Url);

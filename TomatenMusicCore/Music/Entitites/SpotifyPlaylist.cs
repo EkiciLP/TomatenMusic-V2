@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TomatenMusic.Music.Entitites
 {
-    public class SpotifyPlaylist : LavalinkPlaylist
+    public class SpotifyPlaylist : ILavalinkPlaylist
     {
         public string Name { get; }
         public IEnumerable<LavalinkTrack> Tracks { get; }

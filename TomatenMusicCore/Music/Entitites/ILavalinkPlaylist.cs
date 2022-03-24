@@ -8,7 +8,7 @@ using Lavalink4NET.Player;
 
 namespace TomatenMusic.Music.Entitites
 {
-    public interface LavalinkPlaylist
+    public interface ILavalinkPlaylist
     {
         public string Name { get; }
         public IEnumerable<LavalinkTrack> Tracks { get; }

@@ -37,7 +37,7 @@ namespace TomatenMusic.Services
 
             if (channel.Statistics.SubscriberCount != null)
                 context.YoutubeAuthorSubs = (ulong) channel.Statistics.SubscriberCount;
-            context.YoutubeAuthorThumbnail = new Uri(channel.Snippet.Thumbnails.High.Url);
+            context.YoutubeAuthorThumbnail = new Uri(channel.Snippet.Thumbnails.Default__.Url);
             context.YoutubeAuthorUri = new Uri($"https://www.youtube.com/channel/{channel.Id}");
             string desc = video.Snippet.Description;
 
@@ -45,7 +45,12 @@ namespace TomatenMusic.Services
             if (video.Statistics.LikeCount != null)
                 context.YoutubeLikes = (ulong) video.Statistics.LikeCount;
             context.YoutubeTags = video.Snippet.Tags;
-            context.YoutubeThumbnail = new Uri(video.Snippet.Thumbnails.High.Url);
+
+            try
+            {
+                context.YoutubeThumbnail = new Uri(video.Snippet.Thumbnails.High.Url);
+            }catch (Exception ex) { }
+
             context.YoutubeUploadDate = (DateTime)video.Snippet.PublishedAt;
             context.YoutubeViews = (ulong)video.Statistics.ViewCount;
             context.YoutubeCommentCount = video.Statistics.CommentCount;
@@ -61,7 +66,7 @@ namespace TomatenMusic.Services
 
             return newTracks;
         }
-        public async Task<LavalinkPlaylist> PopulatePlaylistAsync(YoutubePlaylist playlist)
+        public async Task<ILavalinkPlaylist> PopulatePlaylistAsync(YoutubePlaylist playlist)
         {
             var list = await GetPlaylistAsync(playlist.Identifier);
             var channel = await GetChannelAsync(list.Snippet.ChannelId);
@@ -72,10 +77,14 @@ namespace TomatenMusic.Services
             if (playlist.Description.Length < 2)
                 playlist.Description = "None";
 
-            playlist.Thumbnail = new Uri(list.Snippet.Thumbnails.High.Url);
+            try
+            {
+                playlist.Thumbnail = new Uri(list.Snippet.Thumbnails.Maxres.Url);
+            }catch (Exception ex) { }
+            playlist.AuthorName = channel.Snippet.Title;
             playlist.CreationTime = (DateTime)list.Snippet.PublishedAt;
             playlist.YoutubeItem = list;
-            playlist.AuthorThumbnail = new Uri(channel.Snippet.Thumbnails.High.Url);
+            playlist.AuthorThumbnail = new Uri(channel.Snippet.Thumbnails.Default__.Url);
             playlist.AuthorUri = new Uri($"https://www.youtube.com/channels/{channel.Id}");
 
             return playlist;

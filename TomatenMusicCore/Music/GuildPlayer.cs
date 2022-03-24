@@ -114,7 +114,7 @@ namespace TomatenMusic.Music
             QueuePrompt.UpdateFor(GuildId);
         }
 
-        public async Task PlayPlaylistAsync(LavalinkPlaylist playlist)
+        public async Task PlayPlaylistAsync(ILavalinkPlaylist playlist)
         {
             EnsureNotDestroyed();
             EnsureConnected();
@@ -132,7 +132,7 @@ namespace TomatenMusic.Music
             QueuePrompt.UpdateFor(GuildId);
         }
 
-        public async Task PlayPlaylistNowAsync(LavalinkPlaylist playlist)
+        public async Task PlayPlaylistNowAsync(ILavalinkPlaylist playlist)
         {
             EnsureConnected();
             EnsureNotDestroyed();
