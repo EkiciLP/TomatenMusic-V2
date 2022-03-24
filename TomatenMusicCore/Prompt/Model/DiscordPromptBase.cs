@@ -164,6 +164,7 @@ namespace TomatenMusic.Prompt.Model
             _client = client.GetShard((ulong)interaction.GuildId);
 
             _client.ComponentInteractionCreated += Discord_ComponentInteractionCreated;
+
             ActivePrompts.Add(this);
             AddGuids();
             DiscordWebhookBuilder builder = await GetWebhookMessageAsync();

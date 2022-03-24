@@ -27,7 +27,7 @@ namespace TomatenMusic_Api.Models
 
             Name = track.Title;
             Platform = ctx.SpotifyIdentifier == null ? TrackPlatform.YOUTUBE : TrackPlatform.SPOTIFY;
-            YoutubeId = track.Identifier;
+            YoutubeId = track.TrackIdentifier;
             SpotifyId = ctx.SpotifyIdentifier;
             URL = ctx.YoutubeUri;
         }

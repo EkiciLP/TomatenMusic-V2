@@ -87,7 +87,7 @@ namespace TomatenMusic.Prompt.Implementation
         {
 
             builder.WithTitle(Title);
-            builder.WithDescription(Common.TrackListString(PageManager.GetPage(CurrentPage)));
+            builder.WithDescription(Common.TrackListString(PageManager.GetPage(CurrentPage), 4000));
             List<DiscordEmbed> embeds = new List<DiscordEmbed>();
             embeds.Add(builder.Build());
 

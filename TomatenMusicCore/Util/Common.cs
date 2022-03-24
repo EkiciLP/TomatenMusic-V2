@@ -104,7 +104,7 @@ namespace TomatenMusic.Util
                 builder.WithAuthor(playlist.AuthorName, playlist.AuthorUri.ToString(), youtubePlaylist.AuthorThumbnail.ToString());
                 builder.WithTitle(playlist.Name);
                 builder.WithUrl(playlist.Url);
-                builder.WithDescription(TrackListString(playlist.Tracks));
+                builder.WithDescription(TrackListString(playlist.Tracks, 4000));
                 builder.WithImageUrl(youtubePlaylist.Thumbnail);
                 builder.AddField("Description", playlist.Description, false);
                 builder.AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true);
@@ -117,7 +117,7 @@ namespace TomatenMusic.Util
 
                 builder.WithTitle(playlist.Name);
                 builder.WithUrl(playlist.Url);
-                builder.WithDescription(TrackListString(playlist.Tracks));
+                builder.WithDescription(TrackListString(playlist.Tracks, 4000));
                 builder.AddField("Description", playlist.Description, false);
                 builder.AddField("Track Count", $"{playlist.Tracks.Count()} Tracks", true);
                 builder.AddField("Length", $"{Common.GetTimestamp(playlist.GetLength())}", true);
@@ -136,7 +136,7 @@ namespace TomatenMusic.Util
         {
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
 
-            builder.WithDescription(TrackListString(player.PlayerQueue.Queue));
+            builder.WithDescription(TrackListString(player.PlayerQueue.Queue, 4000));
             builder.WithTitle("Current Queue");
             builder.WithAuthor($"{player.PlayerQueue.Queue.Count} Songs");
 
@@ -154,24 +154,28 @@ namespace TomatenMusic.Util
                 builder.AddField("Current Playlist", $"[{player.PlayerQueue.CurrentPlaylist.Name}]({player.PlayerQueue.CurrentPlaylist.Url})", true);
 
             if (player.PlayerQueue.PlayedTracks.Any())
-                builder.AddField("History", TrackListString(player.PlayerQueue.PlayedTracks), true);
+                builder.AddField("History", TrackListString(player.PlayerQueue.PlayedTracks, 1000), true);
 
             return builder;
         }
 
-        public static string TrackListString(IEnumerable<LavalinkTrack> tracks)
+        public static string TrackListString(IEnumerable<LavalinkTrack> tracks, int maxCharacters)
         {
             StringBuilder builder = new StringBuilder();
+            string lastString = " ";
             int count = 1;
             foreach (LavalinkTrack track in tracks)
             {
-                FullTrackContext context = (FullTrackContext)track.Context;
-                if (count > 10)
+                if (builder.ToString().Length > maxCharacters)
                 {
-                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - 10));
+                    builder = new StringBuilder(lastString);
+                    builder.Append(String.Format("***And {0} more...***", tracks.Count() - count));
                     break;
                 }
 
+                FullTrackContext context = (FullTrackContext)track.Context;
+
+                lastString = builder.ToString();
                 builder.Append(count).Append(": ").Append($"[{track.Title}]({context.YoutubeUri})").Append(" [").Append(Common.GetTimestamp(track.Duration)).Append("] | ");
                 builder.Append($"[{track.Author}]({context.YoutubeAuthorUri})").Append("\n\n");
                 count++;

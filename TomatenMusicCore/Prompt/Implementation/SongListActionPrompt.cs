@@ -32,7 +32,7 @@ namespace TomatenMusic.Prompt.Implementation
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder()
                 .WithTitle("What do you want to do with these Tracks?");
 
-            builder.WithDescription(Common.TrackListString(Tracks));
+            builder.WithDescription(Common.TrackListString(Tracks, 1000));
 
             return Task.FromResult(new DiscordMessageBuilder().WithEmbed(builder.Build()));
         }

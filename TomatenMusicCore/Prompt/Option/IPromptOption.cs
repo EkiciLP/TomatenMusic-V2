@@ -19,8 +19,5 @@ namespace TomatenMusic.Prompt.Option
         public Func<IPromptOption, Task<IPromptOption>> UpdateMethod { get; set; }
         public Func<DSharpPlus.EventArgs.ComponentInteractionCreateEventArgs, DiscordClient, IPromptOption, Task> Run { get; set; }
 
-
-
-
     }
 }
