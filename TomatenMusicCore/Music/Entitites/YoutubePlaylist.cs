@@ -28,12 +28,12 @@ namespace TomatenMusic.Music.Entitites
         public Playlist YoutubeItem { get; set; }
         public Uri AuthorThumbnail { get; set; }
 
-        public YoutubePlaylist(string name, IEnumerable<LavalinkTrack> tracks, Uri uri)
+        public YoutubePlaylist(string name, IEnumerable<LavalinkTrack> tracks, string id)
         {
-            Identifier = uri.ToString().Replace("https://www.youtube.com/playlist?list=", "").Replace("https://youtube.com/playlist?list=", "");
+            Identifier = id;
             Name = name;
             Tracks = tracks;
-            Url = uri;
+            Url = new Uri($"https://youtube.com/playlist?list={id}");
             TrackCount = tracks.Count();
 
         }

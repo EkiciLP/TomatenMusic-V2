@@ -1,9 +1,12 @@
 using DSharpPlus.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TomatenMusic;
+using TomatenMusic.Music;
 using TomatenMusic_Api;
 using TomatenMusic_Api.Auth.Helpers;
 using TomatenMusic_Api.Models;
+using TomatenMusic_Api.Models.EventArgs;
+using static TomatenMusic_Api.InProcessEventBus;
 
 namespace TomatenMusic_Api.Controllers;
 
@@ -54,8 +57,9 @@ public class PlayerController : ControllerBase
     }
 
 	[HttpPost("connect")]
-	public async Task<IActionResult> PostConnection(ChannelConnectRequest request)
+	public async Task<IActionResult> PostConnect(ChannelConnectRequest request)
 	{
+
 		try
 		{
 			await _tomatenMusicDataService.GetGuildAsync(request.Guild_Id);
@@ -85,8 +89,58 @@ public class PlayerController : ControllerBase
 
 
 
-		_eventBus.OnConnectRequestEvent(new InProcessEventBus.ChannelConnectEventArgs(request.Guild_Id, channel));
+		_eventBus.OnConnectRequestEvent(new ChannelConnectArgs(request.Guild_Id, channel));
 
 		return Ok();
 	}
+
+	[HttpPost("disconnect")]
+	public async Task<IActionResult> PostDisconnect(ChannelDisconnectRequest request)
+    {
+		try
+		{
+			await _tomatenMusicDataService.GetGuildAsync(request.GuildId);
+		}
+		catch (Exception ex)
+		{
+			return NotFound("That Guild was not found");
+		}
+
+		if (!await _tomatenMusicDataService.IsConnectedAsync(request.GuildId) == true)
+			return BadRequest("The Bot is not connected.");
+
+		_eventBus.OnDisconnectRequestEvent(new ChannelDisconnectArgs(request.GuildId));
+		return Ok();
+
+	}
+
+	[HttpPost("play")]
+	public async Task<IActionResult> PostPlay(TrackPlayRequest request)
+    {
+		try
+		{
+			await _tomatenMusicDataService.GetGuildAsync(request.GuildId);
+		}
+		catch (Exception ex)
+		{
+			return NotFound("That Guild was not found");
+		}
+
+		if (!await _tomatenMusicDataService.IsConnectedAsync(request.GuildId) == true)
+			return BadRequest("The Bot is not connected.");
+
+		MusicActionResponse response;
+
+		try
+        {
+			response = await _tomatenMusicDataService.TrackProvider.SearchAsync(request.TrackUri);
+		}catch (Exception ex)
+        {
+			return NotFound(ex.Message + "\n" + ex.StackTrace);
+        }
+
+		_eventBus.OnPlayRequestEvent(new TrackPlayArgs(response, request.GuildId, TimeSpan.FromSeconds(request.StartTimeSeconds), request.Now));
+
+		return Ok();
+    }
 }

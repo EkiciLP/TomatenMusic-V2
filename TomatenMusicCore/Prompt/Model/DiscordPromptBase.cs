@@ -23,6 +23,7 @@ namespace TomatenMusic.Prompt.Model
         public List<IPromptOption> Options { get; protected set; } = new List<IPromptOption>();
         public DiscordClient _client { get; set; }
         public DiscordPromptBase LastPrompt { get; protected set; }
+        public System.Timers.Timer TimeoutTimer { get; set; }
 
         protected ILogger<DiscordPromptBase> _logger { get; set; }
 
@@ -132,6 +133,16 @@ namespace TomatenMusic.Prompt.Model
             Interaction = interaction;
             Message = await interaction.CreateFollowupMessageAsync(builder);
             State = PromptState.OPEN;
+
+            long timeoutTime = (Interaction.CreationTimestamp.ToUnixTimeMilliseconds() + 900000) - DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+            if (TimeoutTimer != null)
+                TimeoutTimer.Close();
+
+            TimeoutTimer = new System.Timers.Timer(timeoutTime);
+            TimeoutTimer.Elapsed += OnTimeout;
+            TimeoutTimer.AutoReset = false;
+            TimeoutTimer.Start();
         }
 
         public async Task UseAsync(DiscordMessage message)
@@ -172,6 +183,22 @@ namespace TomatenMusic.Prompt.Model
             Message = message;
             await EditMessageAsync(builder);
             State = PromptState.OPEN;
+
+            long timeoutTime = (Interaction.CreationTimestamp.ToUnixTimeMilliseconds() + 900000) - DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+            if (TimeoutTimer != null)
+                TimeoutTimer.Close();
+
+            TimeoutTimer = new System.Timers.Timer(timeoutTime);
+            TimeoutTimer.Elapsed += OnTimeout;
+            TimeoutTimer.AutoReset = false;
+            TimeoutTimer.Start();
+            
+        }
+
+        private void OnTimeout(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            _ = InvalidateAsync();
         }
 
         private void AddGuids()
