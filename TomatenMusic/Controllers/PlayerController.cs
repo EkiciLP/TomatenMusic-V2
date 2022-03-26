@@ -1,6 +1,7 @@
 using DSharpPlus.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TomatenMusic;
+using TomatenMusic.Music;
 using TomatenMusic_Api;
 using TomatenMusic_Api.Auth.Helpers;
 using TomatenMusic_Api.Models;
@@ -112,4 +113,34 @@ public class PlayerController : ControllerBase
 		return Ok();
 
 	}
+
+	[HttpPost("play")]
+	public async Task<IActionResult> PostPlay(TrackPlayRequest request)
+    {
+		try
+		{
+			await _tomatenMusicDataService.GetGuildAsync(request.GuildId);
+		}
+		catch (Exception ex)
+		{
+			return NotFound("That Guild was not found");
+		}
+
+		if (!await _tomatenMusicDataService.IsConnectedAsync(request.GuildId) == true)
+			return BadRequest("The Bot is not connected.");
+
+		MusicActionResponse response;
+
+		try
+        {
+			response = await _tomatenMusicDataService.TrackProvider.SearchAsync(request.TrackUri);
+		}catch (Exception ex)
+        {
+			return NotFound(ex.Message + "\n" + ex.StackTrace);
+        }
+
+		_eventBus.OnPlayRequestEvent(new TrackPlayArgs(response, request.GuildId, TimeSpan.FromSeconds(request.StartTimeSeconds), request.Now));
+
+		return Ok();
+    }
 }

@@ -73,7 +73,7 @@ namespace TomatenMusic.Music
             QueuePrompt.UpdateFor(GuildId);
         }
 
-        public async Task PlayTracksAsync(List<LavalinkTrack> tracks)
+        public async Task PlayTracksAsync(IEnumerable<LavalinkTrack> tracks)
         {
             EnsureNotDestroyed();
             EnsureConnected();

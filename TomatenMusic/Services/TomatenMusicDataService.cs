@@ -11,12 +11,14 @@ namespace TomatenMusic_Api
     public class TomatenMusicDataService : IHostedService
     {
         private ILogger<TomatenMusicDataService> _logger;
-        public IServiceProvider _serviceProvider { get; set; } = TomatenMusicBot.ServiceProvider;
+        private IServiceProvider _serviceProvider { get; set; } = TomatenMusicBot.ServiceProvider;
         public IAudioService _audioService { get; set; }
+        public TrackProvider TrackProvider { get; set; }
         public TomatenMusicDataService(ILogger<TomatenMusicDataService> logger)
         {
             _logger = logger;
             _audioService = _serviceProvider.GetRequiredService<IAudioService>();
+            TrackProvider = _serviceProvider.GetRequiredService<TrackProvider>();
         }
 
         public async Task<PlayerConnectionInfo> GetConnectionInfoAsync(ulong guild_id)

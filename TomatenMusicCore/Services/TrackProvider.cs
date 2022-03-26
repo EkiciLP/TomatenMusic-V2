@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using TomatenMusic.Music.Entitites;
 using TomatenMusic.Services;
 
@@ -57,7 +58,8 @@ namespace TomatenMusic.Music
 
             if (loadResult.LoadType == TrackLoadType.PlaylistLoaded && !isSearch)
                 return new MusicActionResponse(
-                    playlist: await _youtubeService.PopulatePlaylistAsync(new YoutubePlaylist(loadResult.PlaylistInfo.Name, await FullTrackContext.PopulateTracksAsync(loadResult.Tracks), uri)));
+                    playlist: await _youtubeService.PopulatePlaylistAsync(
+                        new YoutubePlaylist(loadResult.PlaylistInfo.Name, await FullTrackContext.PopulateTracksAsync(loadResult.Tracks), ParseListId(query))));
             else
                 return new MusicActionResponse(await FullTrackContext.PopulateAsync(loadResult.Tracks.First()));
 
@@ -77,6 +79,28 @@ namespace TomatenMusic.Music
 
             return new MusicActionResponse(loadResult);
 
+        }
+
+        public string ParseListId(string url)
+        {
+            var uri = new Uri(url, UriKind.Absolute);
+
+            // you can check host here => uri.Host <= "www.youtube.com"
+
+            var query = HttpUtility.ParseQueryString(uri.Query);
+
+            var videoId = string.Empty;
+
+            if (query.AllKeys.Contains("list"))
+            {
+                videoId = query["list"];
+            }
+            else
+            {
+                videoId = uri.Segments.Last();
+            }
+
+            return videoId;
         }
 
     }

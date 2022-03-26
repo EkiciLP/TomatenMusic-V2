@@ -59,7 +59,7 @@ namespace TomatenMusic.Music
 
         }
 
-        public Task QueueTracksAsync(List<LavalinkTrack> tracks)
+        public Task QueueTracksAsync(IEnumerable<LavalinkTrack> tracks)
         {
             return Task.Run(() =>
             {

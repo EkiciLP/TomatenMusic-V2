@@ -26,9 +26,40 @@ namespace TomatenMusic_Api
 		{
             _inProcessEventBus.OnConnectRequest += _inProcessEventBus_OnConnectRequest;
             _inProcessEventBus.OnDisconnectRequest += _inProcessEventBus_OnDisconnectRequest;
+            _inProcessEventBus.OnPlayRequest += _inProcessEventBus_OnPlayRequest;
 		}
 
-        private async Task _inProcessEventBus_OnDisconnectRequest(InProcessEventBus sender, ChannelDisconnectArgs e)
+        private async Task _inProcessEventBus_OnPlayRequest(InProcessEventBus sender, TrackPlayArgs e)
+        {
+			GuildPlayer player = _audioService.GetPlayer<GuildPlayer>(e.GuildId);
+
+			if (e.Response.Tracks != null && e.Response.Tracks.Any())
+            {
+				if (e.Now)
+					await player.PlayTracksNowAsync(e.Response.Tracks);
+				else
+					await player.PlayTracksAsync(e.Response.Tracks);
+
+				return;
+			}
+
+			if (e.Response.IsPlaylist)
+            {
+				if (e.Now)
+					await player.PlayPlaylistNowAsync(e.Response.Playlist);
+				else
+					await player.PlayPlaylistAsync(e.Response.Playlist);
+			}else
+            {
+				if (e.Now)
+					await player.PlayNowAsync(e.Response.Track, e.StartTime);
+				else
+					await player.PlayAsync(e.Response.Track, e.StartTime);
+			}
+
+		}
+
+		private async Task _inProcessEventBus_OnDisconnectRequest(InProcessEventBus sender, ChannelDisconnectArgs e)
         {
             GuildPlayer player = _audioService.GetPlayer<GuildPlayer>(e.GuildId);
 			player.DisconnectAsync();

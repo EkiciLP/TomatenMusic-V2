@@ -79,7 +79,7 @@ namespace TomatenMusic.Commands
 
                 try
                 {
-                    if (response.isPlaylist)
+                    if (response.IsPlaylist)
                     {
                         ILavalinkPlaylist playlist = response.Playlist;
                         await player.PlayPlaylistNowAsync(playlist);
@@ -232,7 +232,7 @@ namespace TomatenMusic.Commands
 
             try
                 {
-                    if (response.isPlaylist)
+                    if (response.IsPlaylist)
                     {
                         ILavalinkPlaylist playlist = response.Playlist;
                         await player.PlayPlaylistAsync(playlist);

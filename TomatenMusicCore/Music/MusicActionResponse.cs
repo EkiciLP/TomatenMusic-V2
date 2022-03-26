@@ -11,12 +11,12 @@ namespace TomatenMusic.Music
         public ILavalinkPlaylist Playlist { get; }
         public LavalinkTrack Track { get; }
         public IEnumerable<LavalinkTrack> Tracks { get; }
-        public bool isPlaylist { get; }
+        public bool IsPlaylist { get; }
         public MusicActionResponse(LavalinkTrack track = null, ILavalinkPlaylist playlist = null, IEnumerable<LavalinkTrack> tracks = null)
         {
             Playlist = playlist;
             Track = track;
-            isPlaylist = playlist != null;
+            IsPlaylist = playlist != null;
             Tracks = tracks;
         }
     }
