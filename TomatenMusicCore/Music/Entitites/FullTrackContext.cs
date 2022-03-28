@@ -9,6 +9,7 @@ using Lavalink4NET.Player;
 using Microsoft.Extensions.DependencyInjection;
 using Lavalink4NET;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Music.Entitites
 {

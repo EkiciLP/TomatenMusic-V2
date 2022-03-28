@@ -10,6 +10,7 @@ using TomatenMusic.Music;
 using TomatenMusic.Music.Entitites;
 using Microsoft.Extensions.DependencyInjection;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Prompt.Buttons
 {

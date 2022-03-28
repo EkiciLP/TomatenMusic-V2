@@ -16,6 +16,7 @@ using Lavalink4NET.Rest;
 using Microsoft.Extensions.DependencyInjection;
 using Lavalink4NET.Decoding;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Music
 {
@@ -87,7 +88,7 @@ namespace TomatenMusic.Music
         {
             EnsureNotDestroyed();
             EnsureConnected();
-            if (Position.Position.Seconds < 4)
+            if (Position.Position.Seconds > 5)
             {
                 await ReplayAsync();
                 return;

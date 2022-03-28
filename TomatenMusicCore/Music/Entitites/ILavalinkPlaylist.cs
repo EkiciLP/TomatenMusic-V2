@@ -6,6 +6,7 @@ using TomatenMusic.Util;
 using DSharpPlus.Entities;
 using Lavalink4NET.Player;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Music.Entitites
 {

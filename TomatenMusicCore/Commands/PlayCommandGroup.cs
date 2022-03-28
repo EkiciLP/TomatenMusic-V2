@@ -13,6 +13,7 @@ using TomatenMusic.Music;
 using TomatenMusic.Music.Entitites;
 using TomatenMusic.Util;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Commands
 {
@@ -250,7 +251,7 @@ namespace TomatenMusic.Commands
                         _ = ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent(player.State == PlayerState.NotPlaying ? "Now Playing:" : "Added to Queue")
                             .AddEmbed(Common.AsEmbed(track, player.PlayerQueue.LoopType, player.State == PlayerState.NotPlaying ? 0 : player.PlayerQueue.Queue.Count + 1)));
 
-                        await player.PlayAsync(response.Track);
+                        await player.PlayItemAsync(response.Track);
                     }
                 }
                 catch (Exception ex)
@@ -317,7 +318,7 @@ namespace TomatenMusic.Commands
                 _ = ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent(player.State == PlayerState.NotPlaying ? "Now Playing:" : "Added to Queue")
                     .AddEmbed(Common.AsEmbed(track, player.PlayerQueue.LoopType, player.State == PlayerState.NotPlaying ? 0 : player.PlayerQueue.Queue.Count + 1)));
 
-                await player.PlayAsync(response.Track);
+                await player.PlayItemAsync(response.Track);
 
             sw.Stop();
             _logger.LogDebug($"Command {ctx.CommandName} took {sw.ElapsedMilliseconds}ms to execute.");

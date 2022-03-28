@@ -9,6 +9,7 @@ using TomatenMusic.Prompt.Buttons;
 using TomatenMusic.Prompt.Model;
 using TomatenMusic.Util;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Prompt.Implementation
 {

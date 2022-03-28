@@ -13,6 +13,7 @@ using TomatenMusic.Music;
 using System.Linq;
 using Lavalink4NET.Player;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Prompt.Implementation
 {

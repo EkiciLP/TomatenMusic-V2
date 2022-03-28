@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TomatenMusic.Music;
 
-namespace TomatenMusicCore.Music
+namespace TomatenMusicCore.Music.Entities
 {
     //
     // Summary:
@@ -549,6 +549,8 @@ namespace TomatenMusicCore.Music
         public async Task PlayNow(GuildPlayer player, TimeSpan? startTime = null, TimeSpan? endTime = null, bool withoutQueuePrepend = false)
         {
             Queue<TomatenMusicTrack> reversedTracks = new Queue<TomatenMusicTrack>(this);
+
+            player.PlayerQueue.Queue = new Queue<TomatenMusicTrack>(player.PlayerQueue.Queue.Prepend(new TomatenMusicTrack(player.PlayerQueue.LastTrack.WithPosition(player.TrackPosition))));
 
             TomatenMusicTrack track = reversedTracks.Dequeue();
             player.PlayerQueue.LastTrack = track;

@@ -7,6 +7,7 @@ using Lavalink4NET.Player;
 using Microsoft.Extensions.DependencyInjection;
 using TomatenMusic.Services;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Music.Entitites
 {
@@ -55,6 +56,9 @@ namespace TomatenMusic.Music.Entitites
         {
             if (!player.PlayerQueue.Queue.Any())
                 player.PlayerQueue.CurrentPlaylist = this;
+
+            player.PlayerQueue.Queue = new Queue<TomatenMusicTrack>(player.PlayerQueue.Queue.Prepend(new TomatenMusicTrack(player.PlayerQueue.LastTrack.WithPosition(player.TrackPosition))));
+
 
             Queue<TomatenMusicTrack> reversedTracks = new Queue<TomatenMusicTrack>(Tracks);
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TomatenMusic.Music;
 
-namespace TomatenMusicCore.Music
+namespace TomatenMusicCore.Music.Entities
 {
     public interface IPlayableItem
     {

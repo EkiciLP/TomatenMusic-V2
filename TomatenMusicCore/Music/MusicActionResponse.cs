@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TomatenMusic.Music.Entitites;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Music
 {

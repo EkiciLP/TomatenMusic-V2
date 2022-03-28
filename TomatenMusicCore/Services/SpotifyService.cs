@@ -13,6 +13,7 @@ using Lavalink4NET;
 using Lavalink4NET.Player;
 using System.Runtime.Caching;
 using TomatenMusicCore.Music;
+using TomatenMusicCore.Music.Entities;
 
 namespace TomatenMusic.Services
 {
