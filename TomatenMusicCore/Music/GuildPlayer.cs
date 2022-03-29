@@ -109,7 +109,7 @@ namespace TomatenMusic.Music
             MusicActionResponse response;
             try
             {
-                response = PlayerQueue.NextTrack(true);
+                response = PlayerQueue.(true);
             }catch (Exception ex)
             {
                 if (Autoplay)
@@ -249,6 +249,7 @@ namespace TomatenMusic.Music
                     TomatenMusicTrack newTrack = await youtube.GetRelatedTrackAsync(oldTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
                     _logger.LogInformation($"Autoplaying for track {oldTrack.TrackIdentifier} with Track {newTrack.TrackIdentifier}");
                     await base.OnTrackEndAsync(eventArgs);
+                    PlayerQueue.LastTrack = newTrack;
                     await newTrack.Play(this);
                     QueuePrompt.UpdateFor(GuildId);
 

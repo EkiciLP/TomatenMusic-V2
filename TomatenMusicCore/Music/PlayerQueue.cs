@@ -95,7 +95,7 @@ namespace TomatenMusic.Music
         public MusicActionResponse NextTrack(bool ignoreLoop = false)
         {
             if (LastTrack != null)
-                PlayedTracks = new Queue<TomatenMusicTrack>(PlayedTracks.Prepend(LastTrack));
+                PlayedTracks = new Queue<TomatenMusicTrack>(PlayedTracks.Prepend(new TomatenMusicTrack(LastTrack.WithPosition(TimeSpan.Zero))));
 
             switch (LoopType)
             {
