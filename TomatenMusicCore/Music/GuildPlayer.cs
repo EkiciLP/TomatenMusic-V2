@@ -109,7 +109,7 @@ namespace TomatenMusic.Music
             MusicActionResponse response;
             try
             {
-                response = PlayerQueue.(true);
+                response = PlayerQueue.NextTrack(true);
             }catch (Exception ex)
             {
                 if (Autoplay)
