@@ -20,7 +20,7 @@ namespace TomatenMusic.Music.Entitites
         public IEnumerable<string> YoutubeTags { get; set; }
         public ulong YoutubeViews { get; set; }
         public ulong YoutubeLikes { get; set; }
-        public Uri YoutubeThumbnail { get; set; }
+        public Uri? YoutubeThumbnail { get; set; } = null;
         public DateTime YoutubeUploadDate { get; set; }
         //
         // Summary:

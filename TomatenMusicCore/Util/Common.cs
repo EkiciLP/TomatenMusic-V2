@@ -32,9 +32,11 @@ namespace TomatenMusic.Util
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder()
                 .WithTitle(track.Title)
                 .WithUrl(track.Source)
-                .WithImageUrl(context.YoutubeThumbnail)
                 .WithDescription(context.YoutubeDescription)
                 .AddField("Length", Common.GetTimestamp(track.Duration), true);
+
+            if (context.YoutubeThumbnail != null)
+                builder.WithImageUrl(context.YoutubeThumbnail);
 
             if (context.IsFile)
             {
