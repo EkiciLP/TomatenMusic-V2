@@ -64,27 +64,6 @@ namespace TomatenMusic.Music
             QueuePrompt.UpdateFor(GuildId);
         }
 
-        public async Task PlayPlaylistAsync(ILavalinkPlaylist playlist)
-        {
-            EnsureNotDestroyed();
-            EnsureConnected();
-
-            _ = playlist.Play(this);
-            _logger.LogInformation("Started playing Playlist {0} on Guild {1}", playlist.Title, (await GetGuildAsync()).Name);
-
-
-            QueuePrompt.UpdateFor(GuildId);
-        }
-
-        public async Task PlayPlaylistNowAsync(ILavalinkPlaylist playlist)
-        {
-            EnsureConnected();
-            EnsureNotDestroyed();
-
-
-            QueuePrompt.UpdateFor(GuildId);
-        }
-
         public async Task RewindAsync()
         {
             EnsureNotDestroyed();

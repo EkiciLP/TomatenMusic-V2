@@ -46,9 +46,9 @@ namespace TomatenMusic_Api
 			if (e.Response.IsPlaylist)
             {
 				if (e.Now)
-					await player.PlayPlaylistNowAsync(e.Response.Playlist);
+					await player.PlayNowAsync(e.Response.Playlist);
 				else
-					await player.PlayPlaylistAsync(e.Response.Playlist);
+					await player.PlayItemAsync(e.Response.Playlist);
 			}else
             {
 				if (e.Now)

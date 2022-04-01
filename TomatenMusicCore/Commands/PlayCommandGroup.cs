@@ -84,7 +84,7 @@ namespace TomatenMusic.Commands
                     if (response.IsPlaylist)
                     {
                         ILavalinkPlaylist playlist = response.Playlist;
-                        await player.PlayPlaylistNowAsync(playlist);
+                        await player.PlayNowAsync(playlist);
 
                         _ = ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Now Playing:").AddEmbed(
                         Common.AsEmbed(playlist)
@@ -237,7 +237,7 @@ namespace TomatenMusic.Commands
                     if (response.IsPlaylist)
                     {
                         ILavalinkPlaylist playlist = response.Playlist;
-                        await player.PlayPlaylistAsync(playlist);
+                        await player.PlayItemAsync(playlist);
 
                         await ctx.EditResponseAsync(new DiscordWebhookBuilder().WithContent("Now Playing:").AddEmbed(
                         Common.AsEmbed(playlist)
