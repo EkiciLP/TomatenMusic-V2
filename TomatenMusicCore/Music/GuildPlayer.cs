@@ -69,6 +69,7 @@ namespace TomatenMusic.Music
             EnsureNotDestroyed();
             EnsureConnected();
 
+            _ = playlist.Play(this);
             _logger.LogInformation("Started playing Playlist {0} on Guild {1}", playlist.Title, (await GetGuildAsync()).Name);
 
 
