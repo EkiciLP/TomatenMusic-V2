@@ -157,8 +157,7 @@ namespace TomatenMusic.Music
 
             if (type == LoopType.QUEUE)
             {
-                QueueLoopList = new List<TomatenMusicTrack>(Queue);
-                QueueLoopList.Add(LastTrack);
+                QueueLoopList = new List<TomatenMusicTrack>(QueueLoopList.Prepend(LastTrack));
             }
         }
     }
