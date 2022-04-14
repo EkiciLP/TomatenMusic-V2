@@ -203,7 +203,6 @@ namespace TomatenMusic.Music
         public async override Task OnTrackEndAsync(TrackEndEventArgs eventArgs)
         {
             DisconnectOnStop = false;
-            YoutubeService youtube = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
             var oldTrack = CurrentTrack;
 
             if (eventArgs.Reason != TrackEndReason.Finished)
@@ -226,17 +225,28 @@ namespace TomatenMusic.Music
                         return;
                     }
 
-                    TomatenMusicTrack newTrack = await youtube.GetRelatedTrackAsync(oldTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
-                    _logger.LogInformation($"Autoplaying for track {oldTrack.TrackIdentifier} with Track {newTrack.TrackIdentifier}");
                     await base.OnTrackEndAsync(eventArgs);
-                    PlayerQueue.LastTrack = newTrack;
-                    await newTrack.Play(this);
-                    QueuePrompt.UpdateFor(GuildId);
+                    _ = OnAutoPlay(oldTrack);
 
                 }
             }
 
             
+        }
+
+        public async Task OnAutoPlay(LavalinkTrack oldTrack)
+        {
+            YoutubeService youtube = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
+
+            TomatenMusicTrack newTrack;
+            if (oldTrack.Source != "YouTube" )
+                newTrack = await youtube.GetRelatedTrackAsync(PlayerQueue.PlayedTracks.First(x => x.Source == "YouTube").TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
+            else
+                newTrack = await youtube.GetRelatedTrackAsync(oldTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
+            _logger.LogInformation($"Autoplaying for track {oldTrack.TrackIdentifier} with Track {newTrack.TrackIdentifier}");
+            PlayerQueue.LastTrack = newTrack;
+            await newTrack.Play(this);
+            QueuePrompt.UpdateFor(GuildId);
         }
 
         public async Task<DiscordChannel> GetChannelAsync()
