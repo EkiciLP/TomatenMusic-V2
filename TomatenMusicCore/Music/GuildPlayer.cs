@@ -89,17 +89,12 @@ namespace TomatenMusic.Music
             MusicActionResponse response;
             try
             {
-                response = PlayerQueue.NextTrack(true);
+                response = PlayerQueue.NextTrack(true, Autoplay);
             }catch (Exception ex)
             {
                 if (Autoplay)
                 {
-                    YoutubeService youtube = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
-                    LavalinkTrack newTrack = await youtube.GetRelatedTrackAsync(CurrentTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
-
-                    _logger.LogInformation($"Skipped Track {CurrentTrack.Title} for Autoplayed Track {newTrack.Title}");
-                    await PlayAsync(newTrack);
-                    QueuePrompt.UpdateFor(GuildId);
+                    _ = OnAutoPlay(CurrentTrack);
                     return;
                 }
                 throw ex;
@@ -164,10 +159,16 @@ namespace TomatenMusic.Music
 
             if (channel.Type == ChannelType.Stage)
             {
-                DiscordStageInstance stageInstance = await channel.GetStageInstanceAsync();
+                DiscordStageInstance stageInstance;
+                try
+                {
+                    stageInstance = await channel.GetStageInstanceAsync();
 
-                if (stageInstance == null)
+                }catch (Exception ex)
+                {
                     stageInstance = await channel.CreateStageInstanceAsync("Music");
+                }
+                
                 await stageInstance.Channel.UpdateCurrentUserVoiceStateAsync(false);
             }
 
@@ -203,7 +204,6 @@ namespace TomatenMusic.Music
         public async override Task OnTrackEndAsync(TrackEndEventArgs eventArgs)
         {
             DisconnectOnStop = false;
-            YoutubeService youtube = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
             var oldTrack = CurrentTrack;
 
             if (eventArgs.Reason != TrackEndReason.Finished)
@@ -226,17 +226,28 @@ namespace TomatenMusic.Music
                         return;
                     }
 
-                    TomatenMusicTrack newTrack = await youtube.GetRelatedTrackAsync(oldTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
-                    _logger.LogInformation($"Autoplaying for track {oldTrack.TrackIdentifier} with Track {newTrack.TrackIdentifier}");
                     await base.OnTrackEndAsync(eventArgs);
-                    PlayerQueue.LastTrack = newTrack;
-                    await newTrack.Play(this);
-                    QueuePrompt.UpdateFor(GuildId);
+                    _ = OnAutoPlay(oldTrack);
 
                 }
             }
 
             
+        }
+
+        public async Task OnAutoPlay(LavalinkTrack oldTrack)
+        {
+            YoutubeService youtube = TomatenMusicBot.ServiceProvider.GetRequiredService<YoutubeService>();
+
+            TomatenMusicTrack newTrack;
+            if (oldTrack.Provider != StreamProvider.YouTube)
+                newTrack = await youtube.GetRelatedTrackAsync(PlayerQueue.PlayedTracks.First(x => x.Provider == StreamProvider.YouTube).TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
+            else
+                newTrack = await youtube.GetRelatedTrackAsync(oldTrack.TrackIdentifier, PlayerQueue.PlayedTracks.Take(5).ToList().ConvertAll(x => x.TrackIdentifier));
+            _logger.LogInformation($"Autoplaying for track {oldTrack.TrackIdentifier} with Track {newTrack.TrackIdentifier}");
+            PlayerQueue.LastTrack = newTrack;
+            await newTrack.PlayNow(this, withoutQueuePrepend: true);
+            QueuePrompt.UpdateFor(GuildId);
         }
 
         public async Task<DiscordChannel> GetChannelAsync()
