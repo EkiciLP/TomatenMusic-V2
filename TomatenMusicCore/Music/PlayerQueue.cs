@@ -92,10 +92,11 @@ namespace TomatenMusic.Music
 
         }
 
-        public MusicActionResponse NextTrack(bool ignoreLoop = false)
+        public MusicActionResponse NextTrack(bool ignoreLoop = false, bool autoplay = false)
         {
             if (LastTrack != null)
-                PlayedTracks = new Queue<TomatenMusicTrack>(PlayedTracks.Prepend(new TomatenMusicTrack(LastTrack.WithPosition(TimeSpan.Zero))));
+                if (LoopType != LoopType.NONE && Queue.Count == 0 || autoplay)
+                    PlayedTracks = new Queue<TomatenMusicTrack>(PlayedTracks.Prepend(new TomatenMusicTrack(LastTrack.WithPosition(TimeSpan.Zero))));
 
             switch (LoopType)
             {

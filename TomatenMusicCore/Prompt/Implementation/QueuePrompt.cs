@@ -98,7 +98,10 @@ namespace TomatenMusic.Prompt.Implementation
                         await Player.RewindAsync();
                     }catch (Exception ex)
                     {
-
+                        _ = args.Interaction.CreateResponseAsync(
+                            DSharpPlus.InteractionResponseType.ChannelMessageWithSource,
+                            new DiscordInteractionResponseBuilder()
+                            .WithContent($"An Error occurred during this Interaction {ex.Message}"));
                     }
                 }
             }
@@ -131,8 +134,18 @@ namespace TomatenMusic.Prompt.Implementation
                         _ = args.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent("Please connect to the bots Channel to use this Interaction"));
                         return;
                     }
+                    try
+                    {
+                        await Player.SkipAsync();
 
-                    await Player.SkipAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _ = args.Interaction.CreateResponseAsync(
+                            DSharpPlus.InteractionResponseType.ChannelMessageWithSource,
+                            new DiscordInteractionResponseBuilder()
+                            .WithContent($"An Error occurred during this Interaction {ex.Message}"));
+                    }
 
                     System.Timers.Timer timer = new System.Timers.Timer(800);
                     timer.Elapsed += (s, args) =>
