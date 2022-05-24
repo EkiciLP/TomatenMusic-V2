@@ -87,9 +87,9 @@ namespace TomatenMusic
                     .AddSingleton(
                           new LavalinkNodeOptions
                           {
-                              RestUri = "http://116.202.92.16:2333",
+                              RestUri = "http://127.0.0.1:2333",
                               Password = config.LavaLinkPassword,
-                              WebSocketUri = "ws://116.202.92.16:2333",
+                              WebSocketUri = "ws://127.0.0.1:2333",
                               AllowResuming = true
 
                           })
