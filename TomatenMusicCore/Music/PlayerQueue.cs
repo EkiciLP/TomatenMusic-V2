@@ -26,7 +26,7 @@ namespace TomatenMusic.Music
 
         public TomatenMusicTrack LastTrack { get; set; }
 
-        public List<TomatenMusicTrack> QueueLoopList { get; private set; }
+        public List<TomatenMusicTrack> QueueLoopList { get; private set; } = new List<TomatenMusicTrack>();
 
         public void QueueTrack(TomatenMusicTrack track)
         {
@@ -95,7 +95,7 @@ namespace TomatenMusic.Music
         public MusicActionResponse NextTrack(bool ignoreLoop = false, bool autoplay = false)
         {
             if (LastTrack != null)
-                if (LoopType != LoopType.NONE && Queue.Count == 0 || autoplay)
+                if (LoopType != LoopType.TRACK || (ignoreLoop && (Queue.Any() || autoplay)))
                     PlayedTracks = new Queue<TomatenMusicTrack>(PlayedTracks.Prepend(new TomatenMusicTrack(LastTrack.WithPosition(TimeSpan.Zero))));
 
             switch (LoopType)
@@ -158,7 +158,7 @@ namespace TomatenMusic.Music
 
             if (type == LoopType.QUEUE)
             {
-                QueueLoopList = new List<TomatenMusicTrack>(QueueLoopList.Prepend(LastTrack));
+                QueueLoopList = new List<TomatenMusicTrack>(Queue.Prepend(LastTrack));
             }
         }
     }

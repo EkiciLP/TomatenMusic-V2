@@ -101,7 +101,7 @@ namespace TomatenMusic.Music
             }
 
             _logger.LogInformation($"Skipped Track {CurrentTrack.Title} for Track {response.Track.Title}");
-            await base.PlayAsync(response.Track);
+            await PlayNowAsync(response.Track, withoutQueuePrepend: true);
             QueuePrompt.UpdateFor(GuildId);
         }
 
