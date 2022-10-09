@@ -38,7 +38,7 @@ namespace TomatenMusicCore.Music.Entities
 
         public async Task PlayNow(GuildPlayer player, TimeSpan? startTime = null, TimeSpan? endTime = null, bool withoutQueuePrepend = false)
         {
-            if (!withoutQueuePrepend)
+            if (!withoutQueuePrepend && player.State == PlayerState.Playing)
                 player.PlayerQueue.Queue = new Queue<TomatenMusicTrack>(player.PlayerQueue.Queue.Prepend(new TomatenMusicTrack(player.PlayerQueue.LastTrack.WithPosition(player.TrackPosition))));
 
 
